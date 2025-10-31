@@ -5,7 +5,7 @@ const APP_CACHE = `qaqc-app-${CACHE_VERSION}`;
 // Precache (adjust entry file name if needed)
 const APP_SHELL = [
   './',
-  './qaqc_lubrication_form_AM_header.html',  // <— if you didn’t rename, use your HTML name here
+  './index.html',  // <— if you didn’t rename, use your HTML name here
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -75,3 +75,4 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+

@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="manifest" href="manifest.webmanifest">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lubrication Program - QA/QC Checklist</title>
+<style>
+  :root{
+    --brand:#ff4d00;
+    --ink:#222;--muted:#666;
+    --bg:#f7f7f9;
+    --line:#e6e6ef
+  }
+
+  *{
+    box-sizing:border-box
+  }
+
+  body{
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);
+    margin:0;
+    background:#f7f7f9
+  }
+
+  .page{
+    background:#fff;
+    max-width:900px;margin:24px auto;
+    padding:24px 28px;border:1px solid var(--line);
+    border-radius:12px;
+    box-shadow:0 4px 28px rgba(0,0,0,.05)
+  }
+
+  header{
+    display:grid;
+    grid-template-columns:160px 1fr;
+    gap:16px;
+    align-items:center;
+    margin-bottom:8px
+  }
+
+  header img{
+    max-width:160px;
+    height:auto
+  }
+
+  .hdr-note{
+    text-align:right;
+    font-size:12px;
+    color:var(--muted)
+  }
+
+  .title{
+    font-size:22px;
+    font-weight:700;
+    margin:8px 0 16px
+  }
+
+  .meta{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:32px;
+    row-gap:10px
+  }
+
+  .row{
+    display:grid;
+    grid-template-columns:160px 1fr;
+    gap:6px;
+    align-items:center
+  }
+
+  .row.wide{
+    grid-column:1/-1
+  }
+
+  .lbl{
+    color:var(--brand);
+    font-weight:700
+  }
+
+  input[type="text"],input[type="date"],input[type="time"],textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#fff
+  }
+
+  .gate{
+    display:grid;
+    grid-template-columns:20px 1fr;
+    gap:10px;
+    padding:10px 12px;
+    border:1px dashed var(--line);
+    border-radius:10px;
+    background:#fff8f0;
+    color:#7a4a00;
+    margin-top:12px
+  }
+  
+  .hidden{
+    display:none !important
+  }
+
+  .divider{
+    border-top:2px solid var(--line);
+    margin:16px 0 24px
+  }
+
+  .q{
+    padding:20px 24px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    margin-bottom:14px;
+    background:#fff
+  }
+
+  .q h4{
+    margin:0 0 8px;
+    font-size:16px
+  }
+
+  .q .opts{
+    display:flex;
+    gap:16px;
+    margin:6px 0
+  }
+
+  .q .followup{
+    margin-top:10px;
+    display:none
+  }
+
+  .q textarea{
+    min-height:72px
+  }
+
+  .hint{
+    font-size:12px;
+    color:var(--muted)
+  }
+
+  .thumbs{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:8px
+  }
+
+  .thumbs img{
+    width:120px;
+    height:auto;
+    border:1px solid var(--line);
+    border-radius:6px
+  }
+
+  .ref-img{
+    width:100%;
+    height:auto;
+    border:1px solid var(--line);
+    border-radius:8px
+  }
+
+  .grid2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px
+  }
+
+  .actions{
+    display:flex;
+    gap:12px;
+    justify-content:flex-end;
+    margin-top:20px
+  }
+
+  button{
+    border:none;
+    padding:10px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600
+  }
+
+  .btn-primary{
+    background:var(--brand);
+    color:#fff
+  }
+
+  .btn-secondary{
+    background:#ececf6;
+    color:var(--ink)
+  }
+
+  /* Searchable dropdown (autocomplete) */
+  .ac-wrap{
+    position:relative
+  }
+
+  .ac-input{
+    width:100%;
+    padding:12px 40px 12px 12px;
+    border:2px solid #111;
+    border-radius:10px;
+    background:#fff
+  }
+
+  .ac-chevron{
+    position:absolute;
+    right:10px;
+    top:0;
+    height:100%;
+    display:flex;
+    align-items:center;
+    background:transparent;
+    border:0;
+    padding:0 2px;
+    cursor:pointer;
+    color:#666
+  }
+
+  .ac-chevron svg{
+    width:18px;
+    height:18px
+  }
+
+  .ac-panel{
+    position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    width:min(880px, calc(100vw - 64px));z-index:40;padding:8px;background:#1f1f1f;color:#fff;
+    border:1px solid #0d0d0d;border-radius:12px;max-height:300px;overflow:auto;box-shadow:0 10px 28px rgba(0,0,0,.35)
+  }
+
+  .ac-item{
+    display:block;
+    width:100%;
+    text-align:left;
+    border:none;
+    background:transparent;
+    padding:10px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    color:#fff;
+    font-weight:600;
+    line-height:1.25
+  }
+
+  .ac-item:hover,.ac-item[aria-selected="true"]{
+    background:#2e2e2e
+  }
+
+  .ac-empty{
+    padding:10px 12px;
+    color:#c7c7c7
+  }
+
+  /* amount radios helper */
+  .inline-opts{
+    display:flex;
+    gap:16px;
+    align-items:center
+  }
+
+  .num-input{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:10px
+  }
+
+  /* Equipment photo block */
+  .asset-photo-wrap{
+    margin:6px 0 18px
+  }
+
+  .asset-photo-title{
+    font-weight:700;
+    color:var(--brand);
+    margin:0 0 6px
+  }
+  .asset-photo{
+    display:block;
+    width:100%;
+    height:auto;
+    background:transparent;
+    border:none;
+    border-radius:0;
+  }
+  .asset-photo-hint{font-size:12px;color:var(--muted);margin-top:6px}
+
+  /* MOBILE */
+  @media (max-width: 640px){
+    .meta{grid-template-columns:1fr}
+    .row{grid-template-columns:1fr;gap:4px}
+    header{grid-template-columns:1fr;gap:8px}
+    .hdr-note{text-align:left}
+    .grid2{grid-template-columns:1fr}
+    .actions{justify-content:stretch}
+    .actions button{width:100%}
+  }
+
+  @media print{
+    body{background:#fff}
+    .page{box-shadow:none;border:none;margin:0;max-width:none;border-radius:0}
+    .actions,.hdr-note,.gate{display:none !important}
+    input,textarea{border:none}
+  }
+</style>
+</head>
+<body>
+  <div class="page" id="captureArea">
+    <header>
+      <img id="headerLogo" src="Images/Logo_ArcelorMittal.png" alt="ArcelorMittal">
+      <div class="hdr-note">Consult the electronic version for the current information: printed – <span id="printedAt"></span></div>
+    </header>
+
+    <div class="title">Lubrication Program - QA/QC Checklist</div>
+
+    <section class="meta">
+      <div class="row">
+        <div class="lbl">Business Unit:</div>
+        <div><input type="text" id="business_unit" value="TIN PLATE PRODUCT"></div>
+      </div>
+
+      <div class="row">
+        <div class="lbl">Department:</div>
+        <div><input type="text" id="department" value="TIN MILL STREAM MAINTENANCE"></div>
+      </div>
+
+      <div class="row">
+        <div class="lbl">Assigned WO#:</div>
+        <div><input type="text" id="wo_number" placeholder="e.g., TIN-123456"></div>
+      </div>
+
+      <div class="row wide">
+        <div class="lbl">Route ID:</div>
+        <div class="ac-wrap">
+          <input id="route_search" class="ac-input" placeholder="Type or paste a code (e.g., W3ELL0037)">
+          <button class="ac-chevron" type="button" id="route_toggle" aria-label="Open list">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div id="route_panel" class="ac-panel hidden"></div>
+          <div class="hint">Only specific “Technical Info” routes will unlock the checklist below.</div>
+        </div>
+      </div>
+
+      <div class="row wide">
+        <div class="lbl">Equipment / Asset ID:</div>
+        <div class="ac-wrap">
+          <input id="asset_search" class="ac-input" placeholder="Type or paste an asset name…">
+          <button class="ac-chevron" type="button" id="asset_toggle" aria-label="Open list">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div id="asset_panel" class="ac-panel hidden"></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="routeGate" class="gate">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l10 18H2L12 2zM12 9v5M12 17h.01" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div>Select one Work Instruction / Route ID to proceed. For example: <strong>W3ELL0037</strong>.</div>
+    </div>
+
+    <div id="formBody" class="hidden">
+      <div class="divider"></div>
+
+      <!-- Auto photo for selected asset -->
+      <div id="assetPhotoBlock" class="asset-photo-wrap hidden">
+        <p class="asset-photo-title">Inspection target</p>
+        <img id="assetPhoto" class="asset-photo" alt="Equipment / Asset reference image">
+        <div id="assetPhotoHint" class="asset-photo-hint"></div>
+      </div>
+
+      <section class="q" data-q="1">
+        <h4>1 — Was the lubrication point lubricated as per WI standard?</h4>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="Yes"> Yes</label>
+          <label><input type="radio" name="q1" value="No"> No</label>
+        </div>
+        <div class="followup">
+          <div class="hint">Please, provide more information and upload a picture.</div>
+          <textarea id="q1_txt" placeholder="Describe the deviation..."></textarea>
+          <input type="file" id="q1_img" accept="image/*" multiple />
+          <div class="thumbs" id="q1_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="1b">
+        <h4>1B — Amount of lubricant inserted/filled</h4>
+        <div class="grid2" style="align-items:end;">
+          <div>
+            <label class="hint" for="amt_value">Amount</label>
+            <input id="amt_value" class="num-input" type="number" inputmode="decimal" min="0" step="0.001" placeholder="0.000">
+          </div>
+          <div>
+            <label class="hint">Units</label>
+            <div class="inline-opts">
+              <label><input type="radio" name="amt_unit" value="g" checked> Grams (g)</label>
+              <label><input type="radio" name="amt_unit" value="L"> Liter (L)</label>
+            </div>
+          </div>
+        </div>
+        <div class="hint">Enter numbers only (decimals allowed). Leave blank if not applicable.</div>
+      </section>
+
+      <section class="q" data-q="2">
+        <h4>2 — Was there any inconsistency with the volume added/purged to the pillow block/bearing?</h4>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="Yes"> Yes</label>
+          <label><input type="radio" name="q2" value="No"> No</label>
+        </div>
+        <div class="followup">
+          <div class="hint">Please, provide more information and upload a picture.</div>
+          <textarea id="q2_txt" placeholder="Explain the volume discrepancy..."></textarea>
+          <input type="file" id="q2_img" accept="image/*" multiple />
+          <div class="thumbs" id="q2_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="3">
+        <h4>3 — Are the hoses, grease nipples, and other lubricant components in good condition?</h4>
+        <div class="opts">
+          <label><input type="radio" name="q3" value="Yes"> Yes</label>
+          <label><input type="radio" name="q3" value="No"> No</label>
+        </div>
+        <div class="followup">
+          <div class="hint">Please, provide more information and upload a picture.</div>
+          <textarea id="q3_txt" placeholder="Describe damaged components..."></textarea>
+          <input type="file" id="q3_img" accept="image/*" multiple />
+          <div class="thumbs" id="q3_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="4">
+        <h4>4 — Is there any sign of damage, malfunction, and/or leakage in the lubrication point indicated in the WI?</h4>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="Yes"> Yes</label>
+          <label><input type="radio" name="q4" value="No"> No</label>
+        </div>
+        <div class="followup">
+          <div class="hint">Please, provide more information and upload a picture.</div>
+          <textarea id="q4_txt" placeholder="Describe the observation..."></textarea>
+          <input id="q4_img" type="file" accept="image/*" multiple />
+          <div class="thumbs" id="q4_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="5">
+        <h4>5 — Was the purged grease hardened or visually degraded compared to new grease?</h4>
+        <div class="hint">Use the reference strip below for examples (oil separation, hardening, contamination, starvation, thermal degradation).</div>
+        <img class="ref-img" id="refStrip" src="Images/Grease-Evaluation_Chart.png" alt="Grease Degradation Reference" />
+        <div class="opts" style="margin-top:8px;">
+          <label><input type="radio" name="q5" value="Yes"> Yes</label>
+          <label><input type="radio" name="q5" value="No"> No</label>
+        </div>
+        <div class="followup">
+          <div class="hint">Please, provide more information and upload a picture.</div>
+          <textarea id="q5_txt" placeholder="Describe grease condition..."></textarea>
+          <input id="q5_img" type="file" accept="image/*" multiple />
+          <div class="thumbs" id="q5_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="6">
+        <h4>6 — Is the lubrication ID label present and legible (correct grease/oil spec)?</h4>
+        <div class="opts">
+          <label><input type="radio" name="q6" value="Yes"> Yes</label>
+          <label><input type="radio" name="q6" value="No"> No</label>
+        </div>
+        <div class="followup">
+          <textarea id="q6_txt" placeholder="Label issues..."></textarea>
+          <input id="q6_img" type="file" accept="image/*" multiple />
+          <div class="thumbs" id="q6_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="7">
+        <h4>7 — Guards in place; access safe; purge path clear?</h4>
+        <div class="opts">
+          <label><input type="radio" name="q7" value="Yes"> Yes</label>
+          <label><input type="radio" name="q7" value="No"> No</label>
+        </div>
+        <div class="followup">
+          <textarea id="q7_txt" placeholder="Safety/access concerns..."></textarea>
+          <input id="q7_img" type="file" accept="image/*" multiple />
+          <div class="thumbs" id="q7_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="10">
+        <h4>8 — Additional comments</h4>
+        <textarea id="comments" placeholder="Anything else noteworthy..."></textarea>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="q">
+        <h4>Execution</h4>
+        <div class="grid2">
+          <div>
+            <label class="hint">Inspector / Technician Name</label>
+            <input id="tech_name" type="text" placeholder="Your name">
+          </div>
+          <div>
+            <label class="hint">Date &amp; Time</label>
+            <div class="grid2">
+              <input id="date_exec" type="date">
+              <input id="time_exec" type="time">
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Controls -->
+    <div class="actions no-print" data-html2canvas-ignore="true">
+      <button class="btn-secondary" id="clearBtn"  type="button">Clear Form</button>
+      <button class="btn-secondary" id="submitBtn" type="button">Submit Form</button>
+      <button class="btn-primary"   id="printBtn"  type="button">Print to PDF</button>
+    </div>    
+
+  </div>
+
+<!-- Load html2pdf ONCE -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-YcsIPQx3X9bY2l6f0bB8C8sQ1z7d3h0gZqz0qj3S5tG1Gm9lB1JQ6oZKp8kq8W2Jq4m2hA6g4Qw1sP8a8g+K1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+
+
+<script>
+  // Timestamp
+  document.getElementById('printedAt').textContent = new Date().toLocaleString();
+
+  const RECIPIENT = 'jefferson.dossantos@arcelormittal.com';
+  const allowedRouteCodes = ['W3ELL0037','W3ELL0038','W3ELL0039'];
+
+  const routeLines = `
+W3ELL0001 - ETL3-LUB- 6 WEEK ENTRY LUBRICATION PM
+W3ELL0002 - ETL3-LUB- 6 WEEK EXIT LUBRICATION PM
+W3ELL0003 - 3ETL-LUB- 6 WEEK OIL MIST/GEARBOX CHECKS CLEANER / PICKLE
+W3ELL0037 - ETL3-LUB- PROCESS LUBRICATION TECHNICAL INFO
+W3ELL0038 - ETL3-LUB- ENTRY SECTION LUBRICATION TECHNICAL INFO
+W3ELL0039 - ETL3-LUB- EXIT SECTION LUBRICATION TECHNICAL INFO
+`.trim().split('\n');
+
+  const assetLines = `
+BRU - 001 - MAIN.PROC.TFIN.ETL3.PROC.BRU2.ENTR.ROLL - Driven Side
+BRU - 002 - MAIN.PROC.TFIN.ETL3.PROC.BRU2.ENTR.ROLL - OPS Side
+BRU - 003 - MAIN.PROC.TFIN.ETL3.PROC.BRU2.MIDL.ROLL - Driven Side
+DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
+`.trim().split('\n');
+
+  // ---------- Autocomplete ----------
+  function buildAutocomplete({inputId, panelId, toggleId, data, onPick}) {
+    const input = document.getElementById(inputId);
+    const panel = document.getElementById(panelId);
+    const toggle = document.getElementById(toggleId);
+
+    function render(filterText) {
+      panel.innerHTML = '';
+      const txt = (filterText || '').toLowerCase();
+      const list = data.filter(line => line.toLowerCase().includes(txt));
+      if (list.length === 0) {
+        const div = document.createElement('div');
+        div.className = 'ac-empty';
+        div.textContent = 'No matches found.';
+        panel.appendChild(div);
+      } else {
+        list.forEach(line => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'ac-item';
+          b.textContent = line;
+          b.addEventListener('click', () => { input.value = line; hide(); onPick && onPick(line); });
+          panel.appendChild(b);
+        });
+      }
+      show();
+    }
+    function show(){ panel.classList.remove('hidden'); }
+    function hide(){ panel.classList.add('hidden'); }
+
+    input.addEventListener('focus', () => render(input.value));
+    toggle.addEventListener('click', () => {
+      if (panel.classList.contains('hidden')) render(input.value); else hide();
+    });
+    input.addEventListener('input', () => {
+      const v = input.value.trim();
+      render(v);
+      if (inputId === 'asset_search') {
+        const exact = data.find(d => d.toLowerCase() === v.toLowerCase());
+        if (exact) updateAssetPhoto(exact);
+        if (v === '') updateAssetPhoto('');
+      }
+    });
+    input.addEventListener('change', () => {
+      if (inputId === 'asset_search') {
+        const v = input.value.trim();
+        const exact = data.find(d => d.toLowerCase() === v.toLowerCase());
+        updateAssetPhoto(exact || '');
+      }
+    });
+    input.addEventListener('blur', () => setTimeout(hide, 120));
+    panel.addEventListener('mousedown', e => e.preventDefault());
+  }
+
+  function applyGateFromValue(routeFullText){
+    const code = (routeFullText || '').split(' - ')[0];
+    const ok = allowedRouteCodes.includes(code);
+    document.getElementById('formBody').classList.toggle('hidden', !ok);
+    document.getElementById('routeGate').classList.toggle('hidden', ok);
+  }
+
+  // Asset photo
+  const photoBlock = document.getElementById('assetPhotoBlock');
+  const photoImg   = document.getElementById('assetPhoto');
+  const photoHint  = document.getElementById('assetPhotoHint');
+
+  function updateAssetPhoto(assetFullText){
+    if (!assetFullText){
+      photoBlock.classList.add('hidden');
+      photoImg.removeAttribute('src');
+      photoHint.textContent = '';
+      return;
+    }
+    const filename = encodeURIComponent(assetFullText) + '.png';
+    const url = 'Images/' + filename;
+
+    photoImg.onload = () => {
+      photoHint.textContent = assetFullText;
+      photoBlock.classList.remove('hidden');
+    };
+    photoImg.onerror = () => {
+      photoBlock.classList.add('hidden');
+      photoHint.textContent = '';
+      photoImg.removeAttribute('src');
+    };
+    photoImg.src = url;
+  }
+
+  buildAutocomplete({
+    inputId:'route_search', panelId:'route_panel', toggleId:'route_toggle', data:routeLines,
+    onPick:(line)=>applyGateFromValue(line)
+  });
+  buildAutocomplete({
+    inputId:'asset_search', panelId:'asset_panel', toggleId:'asset_toggle', data:assetLines,
+    onPick:(line)=>updateAssetPhoto(line)
+  });
+
+  document.getElementById('route_search').addEventListener('change', e=>{
+    const v = e.target.value.trim();
+    const code = v.includes(' - ') ? v.split(' - ')[0] : v;
+    const full = routeLines.find(l => l.startsWith(code + ' - '));
+    if (full) e.target.value = full;
+    applyGateFromValue(e.target.value);
+  });
+
+  // Image previews
+  function wirePreview(inputId, thumbsId) {
+    const input = document.getElementById(inputId);
+    const thumbs = document.getElementById(thumbsId);
+    if (!input) return;
+    input.addEventListener('change', () => {
+      thumbs.innerHTML = '';
+      Array.from(input.files || []).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = document.createElement('img');
+          img.src = ev.target.result;
+          thumbs.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  }
+  ['1','2','3','4','5','6','7'].forEach(n => wirePreview('q'+n+'_img','q'+n+'_thumbs'));
+
+  // Follow-up revealers
+  function wireQuestion(qn, showOnValue) {
+    const sec = document.querySelector('section.q[data-q="' + qn + '"]');
+    if (!sec) return;
+    const follow = sec.querySelector('.followup');
+    const radios = sec.querySelectorAll('input[type=radio]');
+    radios.forEach(r => r.addEventListener('change', () => {
+      if (r.checked && r.value === showOnValue) follow.style.display = 'block';
+      else if (r.checked) follow.style.display = 'none';
+    }));
+  }
+  wireQuestion(1,'No'); wireQuestion(2,'Yes'); wireQuestion(3,'No');
+  wireQuestion(4,'Yes'); wireQuestion(5,'Yes'); wireQuestion(6,'No'); wireQuestion(7,'No');
+
+  // Amount numeric guard
+  const amt = document.getElementById('amt_value');
+  if (amt){
+    amt.addEventListener('input', () => {
+      let v = amt.value.replace(/[^0-9.]/g,'');
+      const dot = v.indexOf('.');
+      if (dot !== -1) v = v.slice(0, dot+1) + v.slice(dot+1).replace(/\./g,'');
+      amt.value = v;
+    });
+  }
+
+  // WO validation
+  function ensureWoOrAlert() {
+    const woEl = document.getElementById('wo_number');
+    const wo = (woEl.value || '').trim();
+    if (!wo) {
+      alert('Please, enter Assigned WO#.');
+      woEl.focus();
+      return null;
+    }
+    return wo;
+  }
+
+  // Build email text
+  function buildStatusAndBody() {
+    const q = n => document.querySelector(`input[name="q${n}"]:checked`)?.value || '';
+    const redItems = [];
+    if (q(1) === 'No') redItems.push('1 - Lubrication point issues during the Lubrication Process. Check PDF report attached.');
+    if (q(2) === 'Yes') redItems.push('2 - Inconsistency in the volume added to the lubrication point. Check PDF report attached for more information.');
+    if (q(3) === 'No') redItems.push('3 - Impact on Condition of the lubrication related components. Check PDF report attached.');
+    if (q(4) === 'Yes') redItems.push('4 - Damage or leakage identified in the lubricated point. Check PDF report attached for more information.');
+    if (q(5) === 'Yes') redItems.push('5 - Lubricant consistency out of spec. Check PDF report attached for more information.');
+    if (q(6) === 'No') redItems.push('6 - Issues with the lubrication point Identification found. Check PDF report attached.');
+    if (q(7) === 'No') redItems.push('7 - Safety related issues identified during lubrication. Check PDF report attached.');
+
+    const isGreen = redItems.length === 0;
+    const headerLine = isGreen
+      ? 'QA/QC Performed with no issues identified. GREEN STATUS'
+      : 'QA/QC Performed. RED STATUS — See items below and PDF:';
+
+    const amtVal = (document.getElementById('amt_value')?.value || '').trim();
+    const amtUnitRaw = (document.querySelector('input[name="amt_unit"]:checked')?.value || 'g');
+    const amtUnit = amtUnitRaw === 'L' ? 'L' : 'g';
+
+    const bodyLines = [
+      headerLine,'',
+      `Business Unit: ${document.getElementById('business_unit').value}`,
+      `Department: ${document.getElementById('department').value}`,
+      `WO#: ${document.getElementById('wo_number').value || '—'}`,
+      `Route: ${document.getElementById('route_search').value || '—'}`,
+      `Asset: ${document.getElementById('asset_search').value || '—'}`,
+      `Amount Filled (1B): ${amtVal ? amtVal + ' ' + (amtUnit==='g'?'grams':'L') : '—'}`,'',
+      `Q1: ${q(1)}  Q2: ${q(2)}  Q3: ${q(3)}  Q4: ${q(4)}  Q5: ${q(5)}  Q6: ${q(6)}  Q7: ${q(7)}`,
+      `Comments: ${document.getElementById('comments').value || ''}`,
+      `Tech: ${document.getElementById('tech_name').value || ''}  Date: ${document.getElementById('date_exec').value || ''} ${document.getElementById('time_exec').value || ''}`,
+      ''
+    ];
+    if (!isGreen) bodyLines.push(...redItems);
+    return { isGreen, bodyText: bodyLines.join('\n') };
+  }
+
+  function buildSubject() {
+    const wo = document.getElementById('wo_number').value || 'TIN-XXXXX';
+    const { isGreen } = buildStatusAndBody();
+    const statusText = isGreen ? 'Green Status' : 'Red Status';
+    return `QA/QC Execution Report - WO# ${wo} - ${statusText}`;
+  }
+
+  function validateMandatoryQuestions() {
+  // Check questions 1–7 (radio buttons)
+  for (let i = 1; i <= 7; i++) {
+    const radios = document.querySelectorAll(`input[name="q${i}"]`);
+    const anyChecked = Array.from(radios).some(r => r.checked);
+    if (!anyChecked) {
+      alert(`Please answer question ${i} before submitting.`);
+      radios[0]?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return false;
+    }
+  }
+
+  // Check question 1B (amount)
+  const amt = document.getElementById("amt_value");
+  if (!amt.value.trim()) {
+    alert("Please fill in question 1B (Amount of lubricant inserted/filled).");
+    amt.scrollIntoView({ behavior: "smooth", block: "center" });
+    amt.focus();
+    return false;
+  }
+
+  // Check question 8 (comments)
+  const comments = document.getElementById("comments");
+  if (!comments.value.trim()) {
+    alert("Please provide a comment for question 8 (Additional comments).");
+    comments.scrollIntoView({ behavior: "smooth", block: "center" });
+    comments.focus();
+    return false;
+  }
+
+  return true;
+}
+
+
+  // Submit -> email then PDF (requires WO)
+  function submitThenPdf() {
+    if (!ensureWoOrAlert()) return;
+    if (!validateMandatoryQuestions()) return; // new check
+    const subject = buildSubject();
+    const { bodyText } = buildStatusAndBody();
+    const mailto = `mailto:${encodeURIComponent(RECIPIENT)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+    window.location.href = mailto;
+    setTimeout(() => downloadPDF(), 350);
+  }
+
+  // Print button -> just PDF (requires WO)
+  function printPdfClicked(){
+    if (!ensureWoOrAlert()) return;
+    if (!validateMandatoryQuestions()) return; // new check
+    downloadPDF();
+  }
+
+  // Clear form
+  function clearForm(){
+    // text/date/time inputs
+    document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"], textarea')
+      .forEach(el => el.value = '');
+    // radios/checkboxes
+    document.querySelectorAll('input[type="radio"], input[type="checkbox"]')
+      .forEach(el => el.checked = false);
+    // hide follow-ups
+    document.querySelectorAll('.q .followup').forEach(f => f.style.display = 'none');
+    // clear previews
+    document.querySelectorAll('.thumbs').forEach(t => t.innerHTML = '');
+    // reset unit default for 1B
+    const gUnit = document.querySelector('input[name="amt_unit"][value="g"]');
+    if (gUnit) gUnit.checked = true;
+    // reset route/asset and gate
+    document.getElementById('route_search').value = '';
+    document.getElementById('asset_search').value = '';
+    applyGateFromValue('');
+    updateAssetPhoto('');
+  }
+
+  // PDF generator
+  function downloadPDF(){
+    const toHide = document.querySelectorAll('.ac-panel, .ac-chevron');
+    toHide.forEach(el => el.classList.add('hidden'));
+
+    const wo = document.getElementById('wo_number').value || 'TIN-XXXXX';
+    const routeCode = (document.getElementById('route_search').value || '').split(' - ')[0] || 'NoRoute';
+    const { isGreen } = buildStatusAndBody();
+    const statusShort = isGreen ? 'GREEN' : 'RED';
+    const filename = `QAQC_${wo}_${routeCode}_${statusShort}.pdf`;
+
+    const element = document.getElementById('captureArea');
+    const opt = {
+      margin:[10,10,10,10],
+      filename,
+      image:{ type:'jpeg', quality:0.98 },
+      html2canvas:{ scale:2, useCORS:true, scrollY:0 },
+      jsPDF:{ unit:'mm', format:'a4', orientation:'portrait' }
+    };
+    html2pdf().from(element).set(opt).save().finally(()=>{
+      toHide.forEach(el => el.classList.remove('hidden'));
+    });
+  }
+
+  // Wire buttons (explicit type="button" in HTML; add listeners here)
+  document.getElementById('submitBtn').addEventListener('click', submitThenPdf);
+  document.getElementById('printBtn').addEventListener('click', printPdfClicked);
+  document.getElementById('clearBtn').addEventListener('click', clearForm);
+
+  // PWA: register the service worker (once)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js', { scope: './' })
+        .catch(err => console.error('SW registration failed:', err));
+    });
+  }
+</script>
+
+</body>
+</html>

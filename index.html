@@ -108,6 +108,23 @@
 
   .entry-controls{ display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:24px }
 
+  /* printable marks for radios */
+  .rb-mark{ font-weight:600; margin-right:16px; }
+  .rb-sel{ color: var(--brand); }
+  .rb-unsel{ color: #888; }
+
+  /* printable clones for text/date/time/number/textarea */
+  .input-print{
+    display:inline-block;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#fff;
+    color:var(--ink);
+    white-space:pre-wrap;
+    min-height:38px;
+  }
+
   /* success toast */
   .toast{
     position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
@@ -118,10 +135,6 @@
   }
   .toast.show{ opacity:1;transform:translateX(-50%) translateY(0) }
   .toast .chk{ width:22px;height:22px;display:grid;place-items:center;border-radius:999px;background:var(--ok);color:#fff;font-weight:800 }
-
-  .rb-mark{ font-weight:600; margin-right:16px; }
-  .rb-sel{ color: var(--brand); }   /* selected = orange */
-  .rb-unsel{ color: #888; }         /* unselected = gray */
 
   @media (max-width:640px){
     .meta{ grid-template-columns:1fr }
@@ -144,7 +157,6 @@
       box-shadow:none !important;-webkit-appearance:none;appearance:none;
     }
   }
-
 </style>
 </head>
 <body>
@@ -666,32 +678,58 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
     return `QA/QC Execution Report - WO# ${wo} - ${statusText}`;
   }
 
-  /* ---- Printable radios: swap in live DOM before capture, restore after ---- */
+  /* ---- Printable radios (swap before capture; restore after) ---- */
   let _radioSnapshots = [];
-
   function makeRadiosPrintable(){
     _radioSnapshots = [];
     const containers = document.querySelectorAll('.q .opts, .inline-opts');
     containers.forEach(c => {
-        const html = c.innerHTML;
-        const radios = Array.from(c.querySelectorAll('input[type="radio"]'));
-        if (!radios.length) return;
-
-        const parts = radios.map(r => {
-            const text = (r.parentNode.textContent || '').trim();
-            const cls  = r.checked ? 'rb-mark rb-sel' : 'rb-mark rb-unsel';
-            const dot  = r.checked ? '●' : '○';
-            return `<span class="${cls}">${dot} ${text}</span>`;
-        });
-
-        _radioSnapshots.push([c, html]);
-        c.innerHTML = parts.join('');
+      const html = c.innerHTML;
+      const radios = Array.from(c.querySelectorAll('input[type="radio"]'));
+      if (!radios.length) return;
+      const parts = radios.map(r => {
+        const text = (r.parentNode.textContent || '').trim();
+        const cls  = r.checked ? 'rb-mark rb-sel' : 'rb-mark rb-unsel';
+        const dot  = r.checked ? '●' : '○';
+        return `<span class="${cls}">${dot} ${text}</span>`;
+      });
+      _radioSnapshots.push([c, html]);
+      c.innerHTML = parts.join('');
     });
   }
-
   function restoreRadios(){
     _radioSnapshots.forEach(([node, html]) => { node.innerHTML = html; });
     _radioSnapshots = [];
+  }
+
+  /* ---- Printable inputs/textarea (swap before capture; restore after) ---- */
+  let _inputSnapshots = [];
+  function makeInputsPrintable(){
+    _inputSnapshots = [];
+    const sel = '#captureArea input[type="text"], #captureArea input[type="date"], #captureArea input[type="time"], #captureArea input[type="number"], #captureArea textarea';
+    document.querySelectorAll(sel).forEach(el => {
+      let val = (el.value ?? '').toString();
+      if (!val.trim()) val = '—';
+      const clone = document.createElement('span');
+      clone.className = 'input-print';
+      clone.textContent = val;
+
+      const cs = getComputedStyle(el);
+      if (cs.display === 'block') clone.style.display = 'block';
+      clone.style.width = (el.offsetWidth ? el.offsetWidth + 'px' : '100%');
+
+      _inputSnapshots.push({ el, parent: el.parentNode, next: el.nextSibling, clone });
+      el.classList.add('hidden');
+      el.parentNode.insertBefore(clone, el.nextSibling);
+    });
+  }
+  function restoreInputs(){
+    _inputSnapshots.forEach(({el, parent, next, clone}) => {
+      if (clone && clone.parentNode) clone.parentNode.removeChild(clone);
+      el.classList.remove('hidden');
+      if (el.parentNode !== parent) parent.insertBefore(el, next);
+    });
+    _inputSnapshots = [];
   }
 
   function showToast(){
@@ -705,8 +743,9 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
     const toHide = document.querySelectorAll('.ac-panel, .ac-chevron, .entry-controls, .actions');
     toHide.forEach(el => el.classList.add('hidden'));
 
-    // swap radios to static marks so selections always render
+    // swap radios and inputs to printable clones
     makeRadiosPrintable();
+    makeInputsPrintable();
 
     const wo = document.getElementById('wo_number').value || 'TIN-XXXXX';
     const filename = `QAQC_${wo}.pdf`;
@@ -721,6 +760,7 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
     };
 
     return html2pdf().from(element).set(opt).save().finally(()=>{
+      restoreInputs();
       restoreRadios();
       toHide.forEach(el => el.classList.remove('hidden'));
     });

@@ -930,6 +930,16 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
     return { isGreen, bodyText: bodyLines.join('\n') };
   }
 
+  function syncInputValuesToAttributes() {
+    // Find all text inputs and textareas inside the capture area
+    const inputs = document.querySelectorAll('#captureArea input[type="text"], #captureArea textarea');
+    
+    // Loop through them and set their 'value' attribute to their current value
+    inputs.forEach(el => {
+      el.setAttribute('value', el.value);
+    });
+  }
+
   function buildSubject() {
     const wo = document.getElementById('wo_number').value || 'TIN-XXXXX';
     const { isGreen } = buildStatusAndBody();
@@ -965,6 +975,7 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
   function submitThenPdf() {
     if (!ensureWoOrAlert()) return;
     if (!validateMandatoryQuestions()) return;
+    syncInputValuesToAttributes();
     const subject = buildSubject();
     const { bodyText } = buildStatusAndBody();
     const mailto = `mailto:${encodeURIComponent(RECIPIENT)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
@@ -975,6 +986,7 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
   function printPdfClicked(){
     if (!ensureWoOrAlert()) return;
     if (!validateMandatoryQuestions()) return;
+    syncInputValuesToAttributes();
     downloadPDF();
   }
 

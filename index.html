@@ -266,9 +266,11 @@
     font-weight:600; 
     line-height:1.25
   }
-  .ac-item:hover,.ac-item[
-    aria-selected="true"]{ 
-    background:#2e2e2e }
+  
+  .ac-item:hover,
+  .ac-item[aria-selected="true"]{
+    background:#2e2e2e;
+  }
 
   .ac-empty{ 
     padding:10px 12px; 
@@ -950,27 +952,74 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
 
   /* ---------- PDF + Email ---------- */
   function downloadPDF(){
-    const toHide = document.querySelectorAll('.ac-panel, .ac-chevron, .entry-controls, .actions');
-    toHide.forEach(el => el.classList.add('hidden'));
+  const toHide = document.querySelectorAll('.ac-panel, .ac-chevron, .entry-controls, .actions');
+  toHide.forEach(el => el.classList.add('hidden'));
 
-    const wo = document.getElementById('wo_number').value || 'TIN-XXXXX';
-    const routeCode = (document.getElementById('route_search').value || '').split(' - ')[0] || 'NoRoute';
-    const { isGreen } = buildStatusAndBody();
-    const statusShort = isGreen ? 'GREEN' : 'RED';
-    const filename = `QAQC_${wo}.pdf`;
+  const wo = document.getElementById('wo_number').value || 'TIN-XXXXX';
+  const { isGreen } = buildStatusAndBody();
+  const filename = `QAQC_${wo}.pdf`;
 
-    const element = document.getElementById('captureArea');
-    const opt = {
-      margin:[10,10,10,10],
-      filename,
-      image:{ type:'jpeg', quality:0.98 },
-      html2canvas:{ scale:2, useCORS:true, scrollY:0 },
-      jsPDF:{ unit:'mm', format:'a4', orientation:'portrait' }
-    };
-    html2pdf().from(element).set(opt).save().finally(()=>{
-      toHide.forEach(el => el.classList.remove('hidden'));
+  // Helper that copies live values into the CLONED doc
+  const fillFormValuesInClone = (doc) => {
+    // text/date/time/textarea values
+    doc.querySelectorAll('input, textarea').forEach(el => {
+      const type = (el.getAttribute('type') || '').toLowerCase();
+
+      if (['text','date','time','number','email','tel','search','url',''].includes(type)) {
+        const live = document.getElementById(el.id);
+        if (live) {
+          el.value = live.value;           // visible value
+          el.setAttribute('value', live.value); // attribute
+          el.defaultValue = live.value;    // iOS Safari quirk
+          if (el.tagName === 'TEXTAREA') el.textContent = live.value; // extra safety
+        }
+      }
+
+      // radios/checkboxes (so their “dot” shows up)
+      if (type === 'radio' || type === 'checkbox') {
+        const live = document.querySelector(`input[name="${el.name}"][value="${el.value}"]`);
+        if (live && live.checked) {
+          el.checked = true;
+          el.setAttribute('checked', 'checked');
+        } else {
+          el.checked = false;
+          el.removeAttribute('checked');
+        }
+      }
     });
-  }
+  };
+
+  const element = document.getElementById('captureArea');
+  const opt = {
+    margin: [10,10,10,10],
+    filename,
+    image: { type:'jpeg', quality:0.98 },
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      scrollY: 0,
+      onclone: (clonedDoc) => {
+        // Ensure cloned inputs/textarea contain what the user typed
+        fillFormValuesInClone(clonedDoc);
+
+        // Optional: make form controls look like plain text in the clone
+        const style = clonedDoc.createElement('style');
+        style.textContent = `
+          #captureArea input, #captureArea textarea {
+            border:none !important; background:#fff !important; color:#222 !important;
+            box-shadow:none !important; -webkit-appearance:none; appearance:none;
+          }
+        `;
+        clonedDoc.head.appendChild(style);
+      }
+    },
+    jsPDF: { unit:'mm', format:'a4', orientation:'portrait' }
+  };
+
+  html2pdf().from(element).set(opt).save().finally(()=>{
+    toHide.forEach(el => el.classList.remove('hidden'));
+  });
+}
 
   function submitThenPdf() {
     if (!ensureWoOrAlert()) return;

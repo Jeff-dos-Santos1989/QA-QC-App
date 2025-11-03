@@ -380,8 +380,14 @@
       display:none !important
     }
 
-    input,textarea{
-      border:none
+    /* --- START: THIS IS THE FIX --- */
+    input, textarea {
+      border: none !important;
+      background: #fff !important; /* Ensure background is white */
+      color: #222 !important;     /* Force text color to be dark */
+      box-shadow: none !important;
+      -webkit-appearance: none;  /* Remove default mobile styling */
+      appearance: none;
     }
   }
 

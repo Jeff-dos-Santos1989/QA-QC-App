@@ -19,51 +19,27 @@
   }
 
   *{ box-sizing:border-box }
+  body{ font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);margin:0;background:#f7f7f9 }
+  .page{ background:#fff;max-width:900px;margin:24px auto;padding:24px 28px;border:1px solid var(--line);border-radius:12px;box-shadow:0 4px 28px rgba(0,0,0,.05) }
 
-  body{
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    color:var(--ink);
-    margin:0;
-    background:#f7f7f9
-  }
-
-  .page{
-    background:#fff;
-    max-width:900px;margin:24px auto;
-    padding:24px 28px;border:1px solid var(--line);
-    border-radius:12px;
-    box-shadow:0 4px 28px rgba(0,0,0,.05)
-  }
-
-  header{
-    display:grid;
-    grid-template-columns:160px 1fr;
-    gap:16px;
-    align-items:center;
-    margin-bottom:8px
-  }
+  header{ display:grid;grid-template-columns:160px 1fr;gap:16px;align-items:center;margin-bottom:8px }
   header img{ max-width:160px;height:auto }
   .hdr-note{ text-align:right;font-size:12px;color:var(--muted) }
   .title{ font-size:22px;font-weight:700;margin:8px 0 16px }
 
-  .meta{
-    display:grid;grid-template-columns:1fr 1fr;column-gap:32px;row-gap:10px
-  }
+  .meta{ display:grid;grid-template-columns:1fr 1fr;column-gap:32px;row-gap:10px }
   .row{ display:grid;grid-template-columns:160px 1fr;gap:6px;align-items:center }
   .row.wide{ grid-column:1/-1 }
   .lbl{ color:var(--brand);font-weight:700 }
 
-  input[type="text"],input[type="date"],input[type="time"],textarea{
+  input[type="text"],input[type="date"],input[type="time"],textarea,
+  /* include default-type inputs for styling too */
+  input:not([type]){
     width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff
   }
   input[type="radio"],input[type="checkbox"]{ accent-color:var(--brand) }
 
-  .gate{
-    display:grid;grid-template-columns:20px 1fr;gap:10px;
-    padding:10px 12px;border:1px dashed var(--line);border-radius:10px;
-    background:#fff8f0;color:#7a4a00;margin-top:12px
-  }
-
+  .gate{ display:grid;grid-template-columns:20px 1fr;gap:10px;padding:10px 12px;border:1px dashed var(--line);border-radius:10px;background:#fff8f0;color:#7a4a00;margin-top:12px }
   .hidden{ display:none !important }
   .divider{ border-top:2px solid var(--line);margin:16px 0 24px }
 
@@ -89,11 +65,7 @@
   .ac-input{ width:100%;padding:12px 40px 12px 12px;border:2px solid #111;border-radius:10px;background:#fff }
   .ac-chevron{ position:absolute;right:10px;top:0;height:100%;display:flex;align-items:center;background:transparent;border:0;padding:0 2px;cursor:pointer;color:#666 }
   .ac-chevron svg{ width:18px;height:18px }
-  .ac-panel{
-    position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
-    width:min(880px, calc(100vw - 64px));z-index:40;padding:8px;background:#1f1f1f;color:#fff;
-    border:1px solid #0d0d0d;border-radius:12px;max-height:300px;overflow:auto;box-shadow:0 10px 28px rgba(0,0,0,.35)
-  }
+  .ac-panel{ position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:min(880px, calc(100vw - 64px));z-index:40;padding:8px;background:#1f1f1f;color:#fff;border:1px solid #0d0d0d;border-radius:12px;max-height:300px;overflow:auto;box-shadow:0 10px 28px rgba(0,0,0,.35) }
   .ac-item{ display:block;width:100%;text-align:left;border:none;background:transparent;padding:10px 12px;border-radius:8px;cursor:pointer;color:#fff;font-weight:600;line-height:1.25 }
   .ac-item:hover,.ac-item[aria-selected="true"]{ background:#2e2e2e }
   .ac-empty{ padding:10px 12px;color:#c7c7c7 }
@@ -109,30 +81,17 @@
   .entry-controls{ display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:24px }
 
   /* printable marks for radios */
-  .rb-mark{ font-weight:600; margin-right:16px; }
-  .rb-sel{ color: var(--brand); }
-  .rb-unsel{ color: #888; }
+  .rb-mark{ font-weight:600;margin-right:16px }
+  .rb-sel{ color:var(--brand) }
+  .rb-unsel{ color:#888 }
 
-  /* printable clones for text/date/time/number/textarea */
+  /* printable clones for inputs */
   .input-print{
-    display:inline-block;
-    padding:10px 12px;
-    border:1px solid var(--line);
-    border-radius:10px;
-    background:#fff;
-    color:var(--ink);
-    white-space:pre-wrap;
-    min-height:38px;
+    display:inline-block;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);white-space:pre-wrap;min-height:38px;
   }
 
   /* success toast */
-  .toast{
-    position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
-    background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;border-radius:10px;
-    padding:12px 16px;display:flex;align-items:center;gap:10px;
-    box-shadow:0 10px 30px rgba(0,0,0,.12);
-    opacity:0;pointer-events:none;transition:.25s ease;z-index:9999;
-  }
+  .toast{ position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.12);opacity:0;pointer-events:none;transition:.25s ease;z-index:9999 }
   .toast.show{ opacity:1;transform:translateX(-50%) translateY(0) }
   .toast .chk{ width:22px;height:22px;display:grid;place-items:center;border-radius:999px;background:var(--ok);color:#fff;font-weight:800 }
 
@@ -172,12 +131,12 @@
     <section class="meta">
       <div class="row">
         <div class="lbl">Business Unit:</div>
-        <div><input type="text" id="business_unit" value="TIN PLATE PRODUCT"></div>
+        <div><input id="business_unit" value="TIN PLATE PRODUCT"></div>
       </div>
 
       <div class="row">
         <div class="lbl">Department:</div>
-        <div><input type="text" id="department" value="TIN MILL STREAM MAINTENANCE"></div>
+        <div><input id="department" value="TIN MILL STREAM MAINTENANCE"></div>
       </div>
 
       <div class="row">
@@ -214,7 +173,7 @@
 
         <div class="row">
           <div class="lbl">Inspector / Technician Name</div>
-          <div><input type="text" id="exec_name" placeholder="Your full name"></div>
+          <div><input id="exec_name" placeholder="Your full name"></div>
         </div>
 
         <div class="row">
@@ -667,7 +626,9 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
   }
 
   function syncInputValuesToAttributes() {
-    const inputs = document.querySelectorAll('#captureArea input[type="text"], #captureArea input[type="date"], #captureArea input[type="time"], #captureArea textarea');
+    const inputs = document.querySelectorAll(
+      '#captureArea input[type="text"], #captureArea input[type="date"], #captureArea input[type="time"], #captureArea textarea, #captureArea input:not([type])'
+    );
     inputs.forEach(el => { el.setAttribute('value', el.value); });
   }
 
@@ -678,7 +639,7 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
     return `QA/QC Execution Report - WO# ${wo} - ${statusText}`;
   }
 
-  /* ---- Printable radios (swap before capture; restore after) ---- */
+  /* ---- Printable radios ---- */
   let _radioSnapshots = [];
   function makeRadiosPrintable(){
     _radioSnapshots = [];
@@ -697,39 +658,34 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
       c.innerHTML = parts.join('');
     });
   }
-  function restoreRadios(){
-    _radioSnapshots.forEach(([node, html]) => { node.innerHTML = html; });
-    _radioSnapshots = [];
-  }
+  function restoreRadios(){ _radioSnapshots.forEach(([n,h])=>{ n.innerHTML=h; }); _radioSnapshots=[]; }
 
-  /* ---- Printable inputs/textarea (swap before capture; restore after) ---- */
+  /* ---- Printable inputs/textarea ---- */
   let _inputSnapshots = [];
   function makeInputsPrintable(){
     _inputSnapshots = [];
-    const sel = '#captureArea input[type="text"], #captureArea input[type="date"], #captureArea input[type="time"], #captureArea input[type="number"], #captureArea textarea';
+    const sel = '#captureArea input[type="text"], #captureArea input[type="date"], #captureArea input[type="time"], #captureArea input[type="number"], #captureArea textarea, #captureArea input:not([type])';
     document.querySelectorAll(sel).forEach(el => {
       let val = (el.value ?? '').toString();
       if (!val.trim()) val = '—';
       const clone = document.createElement('span');
       clone.className = 'input-print';
       clone.textContent = val;
-
       const cs = getComputedStyle(el);
       if (cs.display === 'block') clone.style.display = 'block';
       clone.style.width = (el.offsetWidth ? el.offsetWidth + 'px' : '100%');
-
       _inputSnapshots.push({ el, parent: el.parentNode, next: el.nextSibling, clone });
       el.classList.add('hidden');
       el.parentNode.insertBefore(clone, el.nextSibling);
     });
   }
   function restoreInputs(){
-    _inputSnapshots.forEach(({el, parent, next, clone}) => {
+    _inputSnapshots.forEach(({el,parent,next,clone})=>{
       if (clone && clone.parentNode) clone.parentNode.removeChild(clone);
       el.classList.remove('hidden');
-      if (el.parentNode !== parent) parent.insertBefore(el, next);
+      if (el.parentNode !== parent) parent.insertBefore(el,next);
     });
-    _inputSnapshots = [];
+    _inputSnapshots=[];
   }
 
   function showToast(){
@@ -743,7 +699,6 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
     const toHide = document.querySelectorAll('.ac-panel, .ac-chevron, .entry-controls, .actions');
     toHide.forEach(el => el.classList.add('hidden'));
 
-    // swap radios and inputs to printable clones
     makeRadiosPrintable();
     makeInputsPrintable();
 

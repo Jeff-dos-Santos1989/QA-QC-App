@@ -7,7 +7,7 @@
 <title>Lubrication Program - QA/QC Checklist</title>
 <style>
   :root{
-    --brand:#ff4d00;   /* orange */
+    --brand:#ff4d00;  /* orange */
     --danger:#d92b2b;  /* red for remove */
     --ink:#222;--muted:#666;
     --bg:#f7f7f9;
@@ -180,7 +180,7 @@
   /* Per-asset controls layout */
   .entry-controls{
     display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
-    margin-top:24px;   /* spacing away from Q8 */
+    margin-top:24px;  /* spacing away from Q8 */
   }
 
   /* MOBILE */
@@ -205,7 +205,7 @@
 </style>
 </head>
 <body>
-
+  
   <div class="page" id="captureArea">
     <header>
       <img id="headerLogo" src="Images/Logo_ArcelorMittal.png" alt="ArcelorMittal">
@@ -260,14 +260,12 @@
       <div>Select one Work Instruction / Route ID to proceed. For example: <strong>W3ELL0037</strong>.</div>
     </div>
 
-    <!-- Container for one or more asset entries -->
     <div id="formBody" class="hidden">
       <div class="divider"></div>
 
       <div id="assetEntries"></div>
     </div>
 
-    <!-- Global actions -->
     <div class="actions no-print" data-html2canvas-ignore="true">
       <button class="btn-clear"   id="clearBtn"  type="button">Clear Form</button>
       <button class="btn-submit"  id="submitBtn" type="button">Submit Form (Attach PDF)</button>
@@ -275,7 +273,6 @@
     </div>
   </div>
 
-<!-- html2pdf (single include) -->
 <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
 
 <script>
@@ -291,14 +288,14 @@ W3ELL0003 - 3ETL-LUB- 6 WEEK OIL MIST/GEARBOX CHECKS CLEANER / PICKLE
 W3ELL0037 - ETL3-LUB- PROCESS LUBRICATION TECHNICAL INFO
 W3ELL0038 - ETL3-LUB- ENTRY SECTION LUBRICATION TECHNICAL INFO
 W3ELL0039 - ETL3-LUB- EXIT SECTION LUBRICATION TECHNICAL INFO
-`.trim().split('\n'); // <-- CORRECTED
+`.trim().split('\n');
 
-const assetLines = `
+  const assetLines = `
 BRU - 001 - MAIN.PROC.TFIN.ETL3.PROC.BRU2.ENTR.ROLL - Driven Side
 BRU - 002 - MAIN.PROC.TFIN.ETL3.PROC.BRU2.ENTR.ROLL - OPS Side
 BRU - 003 - MAIN.PROC.TFIN.ETL3.PROC.BRU2.MIDL.ROLL - Driven Side
-DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
-`.trim().split('\n'); // <-- CORRECTED
+DFR - 286 - DELFECTOR ROLL ASSEMBLY E3A - OPS Side
+`.trim().split('\n');
 
   /* ---------- Autocomplete ---------- */
   function buildAutocomplete({inputId, panelId, toggleId, data, onPick}) {
@@ -372,7 +369,7 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
   });
   buildAutocomplete({
     inputId:'asset_search', panelId:'asset_panel', toggleId:'asset_toggle', data:assetLines,
-    onPick:(line)=>updateAssetPhoto(line)   // top preview only (optional helper)
+    onPick:(line)=>updateAssetPhoto(line)  // top preview only (optional helper)
   });
 
   document.getElementById('route_search').addEventListener('change', e=>{
@@ -385,40 +382,40 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
 
   /* Optional top-of-page preview */
   function updateAssetPhoto(assetName) {
-      // Find the *first* asset entry on the page
-      const firstEntry = document.querySelector('.asset-entry');
-      if (!firstEntry) return; // No entries added yet
+    // Find the *first* asset entry on the page
+    const firstEntry = document.querySelector('.asset-entry');
+    if (!firstEntry) return; // No entries added yet
 
-      // Find the photo elements inside that first entry
-      const wrap = firstEntry.querySelector('.asset-photo-wrap');
-      const img = firstEntry.querySelector('.asset-photo');
-      const hint = firstEntry.querySelector('.asset-photo-hint');
+    // Find the photo elements inside that first entry
+    const wrap = firstEntry.querySelector('.asset-photo-wrap');
+    const img = firstEntry.querySelector('.asset-photo');
+    const hint = firstEntry.querySelector('.asset-photo-hint');
 
-      if (!wrap || !img || !hint) return; // Couldn't find the HTML elements
+    if (!wrap || !img || !hint) return; // Couldn't find the HTML elements
 
-      if (!assetName) {
-          // If the asset name is cleared, hide the block
-          wrap.classList.add('hidden');
-          img.src = '';
-          hint.textContent = '';
-      } else {
-          // --- This is the new logic ---
-          // Build the image path, assuming it's a .png file in the Images folder
-          const imgPath = `Images/${assetName}.png`;
-
-          img.src = imgPath;
-          hint.textContent = assetName; // Show the name as a caption
-
-          // Show the block *after* checking if the image loads
-          img.onload = () => {
-              wrap.classList.remove('hidden'); // Show the block
-          };
-          // If the image fails to load (e.g., missing file), hide the block
-          img.onerror = () => {
-              wrap.classList.add('hidden'); 
-              console.warn(`Image not found: ${imgPath}`);
-          };
-      }
+    if (!assetName) {
+      // If the asset name is cleared, hide the block
+      wrap.classList.add('hidden');
+      img.src = '';
+      hint.textContent = '';
+    } else {
+      // --- This is the new logic ---
+      // Build the image path, assuming it's a .png file in the Images folder
+      const imgPath = `Images/${assetName}.png`;
+      
+      img.src = imgPath;
+      hint.textContent = assetName; // Show the name as a caption
+      
+      // Show the block *after* checking if the image loads
+      img.onload = () => {
+        wrap.classList.remove('hidden'); // Show the block
+      };
+      // If the image fails to load (e.g., missing file), hide the block
+      img.onerror = () => {
+        wrap.classList.add('hidden'); 
+        console.warn(`Image not found: ${imgPath}`);
+      };
+    }
   }
 
   /* ---------- Asset Entry Template (Add/Remove) ---------- */
@@ -494,7 +491,6 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
     entry.className = 'asset-entry';
     const eid = crypto.randomUUID();
     entry.innerHTML = `
-      <!-- Auto photo for selected asset (optional block; you can feed a per-entry asset selector if needed) -->
       <div class="asset-photo-wrap hidden">
         <p class="asset-photo-title">Inspection target</p>
         <img class="asset-photo" alt="Equipment / Asset reference image">
@@ -628,7 +624,6 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
         <textarea class="entry-comments" placeholder="Anything else noteworthy..."></textarea>
       </section>
 
-      <!-- Per-entry controls: now AFTER Q8, spaced by .entry-controls margin-top -->
       <div class="entry-controls no-print" data-html2canvas-ignore="true">
         <button type="button" class="btn-danger btn-remove-entry">Remove Asset Entry</button>
         <button type="button" class="btn-add btn-add-entry">Add Asset Entry</button>
@@ -686,50 +681,71 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
   }
 
   function buildStatusAndBody() {
-    // This is your original “single body” composer. Kept unchanged per your request.
+    // Helper to find the comment from the *first* entry's followup
+    // NOTE: This respects the original code's logic of only reading the first asset entry
+    const getFollowupComment = (qNum) => {
+      const textarea = document.querySelector(`section.q[data-q="${qNum}"] .followup textarea`);
+      const comment = textarea ? textarea.value.trim() : '';
+      // Return the comment or a placeholder if it was left blank
+      return comment || 'No specific comment provided.';
+    };
+
+    // Helper to get the checked value for a question
     const q = n => {
-      // find any checked for that number
       const r = document.querySelector(`input[name^="q${n}_"]:checked`);
       return r?.value || '';
     };
+
+    // Build the list of red items based on your exact logic
     const redItems = [];
-    if (q(1) === 'No') redItems.push('1 - Lubrication point issues during the Lubrication Process. Check PDF report attached.');
-    if (q(2) === 'Yes') redItems.push('2 - Inconsistency in the volume added to the lubrication point. Check PDF report attached for more information.');
-    if (q(3) === 'No') redItems.push('3 - Impact on Condition of the lubrication related components. Check PDF report attached.');
-    if (q(4) === 'Yes') redItems.push('4 - Damage or leakage identified in the lubricated point. Check PDF report attached for more information.');
-    if (q(5) === 'Yes') redItems.push('5 - Lubricant consistency out of spec. Check PDF report attached for more information.');
-    if (q(6) === 'No') redItems.push('6 - Issues with the lubrication point Identification found. Check PDF report attached.');
-    if (q(7) === 'No') redItems.push('7 - Safety related issues identified during lubrication. Check PDF report attached.');
+    if (q(1) === 'No')  redItems.push(`Lubrication point issues during the Lubrication Process.\nComments: ${getFollowupComment('1')}`);
+    if (q(2) === 'Yes') redItems.push(`Inconsistency in the volume added to the lubrication point.\nComments: ${getFollowupComment('2')}`);
+    if (q(3) === 'No')  redItems.push(`Impact on Condition of the lubrication related components.\nComments: ${getFollowupComment('3')}`);
+    if (q(4) === 'Yes') redItems.push(`Damage or leakage identified in the lubricated point.\nComments: ${getFollowupComment('4')}`);
+    if (q(5) === 'Yes') redItems.push(`Lubricant consistency out of spec.\nComments: ${getFollowupComment('5')}`);
+    if (q(6) === 'No')  redItems.push(`Issues with the lubrication point Identification found.\nComments: ${getFollowupComment('6')}`);
+    if (q(7) === 'No')  redItems.push(`Safety related issues identified during lubrication.\nComments: ${getFollowupComment('7')}`);
 
+    // Check if any red items were found
     const isGreen = redItems.length === 0;
-    const headerLine = isGreen
-      ? 'QA/QC Performed with no issues identified. GREEN STATUS'
-      : 'QA/QC Performed. RED STATUS — See items below and PDF:';
 
-    const amtVal = (document.querySelector('.amt_value')?.value || '').trim();
-    // best-effort unit read (first match)
-    const unitRadio = document.querySelector('input[name^="amt_unit_"]:checked');
-    const amtUnit = unitRadio?.value === 'L' ? 'L' : 'g';
-
-    const bodyLines = [
-      headerLine,'',
+    // Define the meta info block used in both templates
+    const metaInfo = [
       `Business Unit: ${document.getElementById('business_unit').value}`,
       `Department: ${document.getElementById('department').value}`,
       `WO#: ${document.getElementById('wo_number').value || '—'}`,
       `Route: ${document.getElementById('route_search').value || '—'}`,
-      `Asset: ${document.getElementById('asset_search').value || '—'}`,
-      `Amount Filled (1B): ${amtVal ? amtVal + ' ' + (amtUnit==='g'?'grams':'L') : '—'}`,'',
-      `Comments: ${document.querySelector('.entry-comments')?.value || ''}`,
-      ''
+      `Asset: ${document.getElementById('asset_search').value || '—'}`
     ];
-    if (!isGreen) bodyLines.push(...redItems);
-    return { isGreen, bodyText: bodyLines.join('\\n') };
+
+    let bodyLines = [];
+    
+    // --- Build the email body based on status ---
+    if (isGreen) {
+      // GREEN STATUS
+      bodyLines.push('QA/QC Performed - Green STATUS 🟢\n');
+      bodyLines.push(...metaInfo);
+      bodyLines.push('\nNo issues found.');
+    } else {
+      // RED STATUS
+      bodyLines.push('QA/QC Performed - RED STATUS 🔴\n');
+      bodyLines.push('Highlights that can better looked at the PDF report attached\n');
+      bodyLines.push(...metaInfo);
+      // Using your separator (and making sure spaces are normal spaces)
+      bodyLines.push('\n' + '# ------ # ------ # ------ # ------ # ------ #'.replace(/ /g, ' '));
+      // Join each issue with a blank line between them
+      bodyLines.push(redItems.join('\n\n')); 
+    }
+    
+    // Return the final text, using \n for line breaks in the mailto link
+    return { isGreen, bodyText: bodyLines.join('\n') };
   }
 
   function buildSubject() {
     const wo = document.getElementById('wo_number').value || 'TIN-XXXXX';
     const { isGreen } = buildStatusAndBody();
-    const statusText = isGreen ? 'Green Status' : 'Red Status';
+    // Add emojis to subject line for high visibility
+    const statusText = isGreen ? 'Green Status 🟢' : 'Red Status 🔴';
     return `QA/QC Execution Report - WO# ${wo} - ${statusText}`;
   }
 
@@ -742,7 +758,7 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
     const routeCode = (document.getElementById('route_search').value || '').split(' - ')[0] || 'NoRoute';
     const { isGreen } = buildStatusAndBody();
     const statusShort = isGreen ? 'GREEN' : 'RED';
-    const filename = `QAQC_${wo}_${routeCode}_${statusShort}.pdf`;
+    const filename = `QAQC_${wo}.pdf`;
 
     const element = document.getElementById('captureArea');
     const opt = {

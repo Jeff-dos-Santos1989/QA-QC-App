@@ -455,6 +455,25 @@
       <div class="divider"></div>
 
       <div id="assetEntries"></div>
+
+      <!-- Execution block (technician + date & time) -->
+      <div class="divider"></div>
+      <section class="q" id="execution">
+        <h4>Execution</h4>
+
+        <div class="row">
+          <div class="lbl">Inspector / Technician Name</div>
+          <div><input type="text" id="exec_name" placeholder="Your full name"></div>
+        </div>
+
+        <div class="row">
+          <div class="lbl">Date &amp; Time</div>
+          <div class="grid2">
+            <input type="date" id="exec_date">
+            <input type="time" id="exec_time">
+          </div>
+        </div>
+      </section>
     </div>
 
     <div class="actions no-print" data-html2canvas-ignore="true">
@@ -868,6 +887,28 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
       comments?.focus();
       return false;
     }
+
+    // Execution (name/date/time)
+    const execName = document.getElementById('exec_name');
+    const execDate = document.getElementById('exec_date');
+    const execTime = document.getElementById('exec_time');
+
+    if (!execName?.value.trim()) {
+      alert('Please enter the Inspector / Technician name.');
+      execName?.focus();
+      return false;
+    }
+    if (!execDate?.value) {
+      alert('Please enter the execution date.');
+      execDate?.focus();
+      return false;
+    }
+    if (!execTime?.value) {
+      alert('Please enter the execution time.');
+      execTime?.focus();
+      return false;
+    }
+
     return true;
   }
 
@@ -906,7 +947,10 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
       `Department: ${document.getElementById('department').value}`,
       `WO#: ${document.getElementById('wo_number').value || '—'}`,
       `Route: ${document.getElementById('route_search').value || '—'}`,
-      `Asset: ${document.getElementById('asset_search').value || '—'}`
+      `Asset: ${document.getElementById('asset_search').value || '—'}`,
+      `Inspector: ${document.getElementById('exec_name')?.value || '—'}`,
+      `Execution Date: ${document.getElementById('exec_date')?.value || '—'}`,
+      `Execution Time: ${document.getElementById('exec_time')?.value || '—'}`
     ];
 
     let bodyLines = [];
@@ -949,6 +993,15 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
     const statusText = isGreen ? 'Green Status 🟢' : 'Red Status 🔴';
     return `QA/QC Execution Report - WO# ${wo} - ${statusText}`;
   }
+
+  // after your other JS runs…
+  (function autofillExec(){
+    const d = document.getElementById('exec_date');
+    const t = document.getElementById('exec_time');
+    const now = new Date();
+    if (d && !d.value) d.value = now.toISOString().slice(0,10);
+    if (t && !t.value) t.value = now.toTimeString().slice(0,5);
+  })();
 
   /* ---------- PDF + Email ---------- */
   function downloadPDF(){

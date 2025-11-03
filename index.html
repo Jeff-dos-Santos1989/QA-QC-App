@@ -119,6 +119,10 @@
   .toast.show{ opacity:1;transform:translateX(-50%) translateY(0) }
   .toast .chk{ width:22px;height:22px;display:grid;place-items:center;border-radius:999px;background:var(--ok);color:#fff;font-weight:800 }
 
+  .rb-mark{ font-weight:600; margin-right:16px; }
+  .rb-sel{ color: var(--brand); }   /* selected = orange */
+  .rb-unsel{ color: #888; }         /* unselected = gray */
+
   @media (max-width:640px){
     .meta{ grid-template-columns:1fr }
     .row{ grid-template-columns:1fr;gap:4px }
@@ -140,6 +144,7 @@
       box-shadow:none !important;-webkit-appearance:none;appearance:none;
     }
   }
+
 </style>
 </head>
 <body>
@@ -663,21 +668,27 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
 
   /* ---- Printable radios: swap in live DOM before capture, restore after ---- */
   let _radioSnapshots = [];
+
   function makeRadiosPrintable(){
     _radioSnapshots = [];
     const containers = document.querySelectorAll('.q .opts, .inline-opts');
     containers.forEach(c => {
-      const html = c.innerHTML;
-      const radios = Array.from(c.querySelectorAll('input[type="radio"]'));
-      if (!radios.length) return;
-      const parts = radios.map(r => {
-        const text = (r.parentNode.textContent || '').trim();
-        return `<span class="rb-mark" style="font-weight:600;margin-right:16px;">${r.checked ? '●' : '○'} ${text}</span>`;
-      });
-      _radioSnapshots.push([c, html]);   // save to restore later
-      c.innerHTML = parts.join('');
+        const html = c.innerHTML;
+        const radios = Array.from(c.querySelectorAll('input[type="radio"]'));
+        if (!radios.length) return;
+
+        const parts = radios.map(r => {
+            const text = (r.parentNode.textContent || '').trim();
+            const cls  = r.checked ? 'rb-mark rb-sel' : 'rb-mark rb-unsel';
+            const dot  = r.checked ? '●' : '○';
+            return `<span class="${cls}">${dot} ${text}</span>`;
+        });
+
+        _radioSnapshots.push([c, html]);
+        c.innerHTML = parts.join('');
     });
   }
+
   function restoreRadios(){
     _radioSnapshots.forEach(([node, html]) => { node.innerHTML = html; });
     _radioSnapshots = [];

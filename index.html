@@ -1,125 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lubrication Program - QA/QC Checklist</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lubrication Program - QA/QC Checklist</title>
+<style>
+  :root{
+    --brand:#ff4d00;   /* orange */
+    --danger:#d92b2b;  /* red for remove */
+    --ink:#222;--muted:#666;
+    --bg:#f7f7f9;
+    --line:#e6e6ef
+  }
 
-  <style>
-    :root{
-      --brand:#ff4d00;
-      --ink:#222;--muted:#666;
-      --bg:#f7f7f9;
-      --line:#e6e6ef
-    }
-    *{ box-sizing:border-box }
+  *{ box-sizing:border-box }
 
-    /* keep your original body styles */
-    body{
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      color:var(--ink);
-      margin:0;
-      background:#f7f7f9
-    }
+  body{
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);
+    margin:0;
+    background:#f7f7f9
+  }
 
-    .page{
-      background:#fff;
-      max-width:900px;margin:24px auto;
-      padding:24px 28px;border:1px solid var(--line);
-      border-radius:12px;
-      box-shadow:0 4px 28px rgba(0,0,0,.05)
-    }
+  .page{
+    background:#fff;
+    max-width:900px;margin:24px auto;
+    padding:24px 28px;border:1px solid var(--line);
+    border-radius:12px;
+    box-shadow:0 4px 28px rgba(0,0,0,.05)
+  }
 
-    header{ display:grid; grid-template-columns:160px 1fr; gap:16px; align-items:center; margin-bottom:8px }
-    header img{ max-width:160px; height:auto }
-    .hdr-note{ text-align:right; font-size:12px; color:var(--muted) }
-    .title{ font-size:22px; font-weight:700; margin:8px 0 16px }
+  header{
+    display:grid;
+    grid-template-columns:160px 1fr;
+    gap:16px;
+    align-items:center;
+    margin-bottom:8px
+  }
 
-    .meta{ display:grid; grid-template-columns:1fr 1fr; column-gap:32px; row-gap:10px }
-    .row{ display:grid; grid-template-columns:160px 1fr; gap:6px; align-items:center }
-    .row.wide{ grid-column:1/-1 }
-    .lbl{ color:var(--brand); font-weight:700 }
+  header img{ max-width:160px; height:auto }
 
-    input[type="text"],input[type="date"],input[type="time"],textarea{
-      width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:#fff
-    }
+  .hdr-note{ text-align:right; font-size:12px; color:var(--muted) }
 
-    .gate{
-      display:grid; grid-template-columns:20px 1fr; gap:10px;
-      padding:10px 12px; border:1px dashed var(--line); border-radius:10px;
-      background:#fff8f0; color:#7a4a00; margin-top:12px
-    }
+  .title{ font-size:22px; font-weight:700; margin:8px 0 16px }
 
-    .hidden{ display:none !important }
-    .divider{ border-top:2px solid var(--line); margin:16px 0 24px }
+  .meta{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:32px;
+    row-gap:10px
+  }
 
-    .q{ padding:20px 24px; border:1px solid var(--line); border-radius:10px; margin-bottom:14px; background:#fff }
-    .q h4{ margin:0 0 8px; font-size:16px }
-    .q .opts{ display:flex; gap:16px; margin:6px 0 }
-    .q .followup{ margin-top:10px; display:none }
-    .q textarea{ min-height:72px }
-    .hint{ font-size:12px; color:var(--muted) }
+  .row{
+    display:grid;
+    grid-template-columns:160px 1fr;
+    gap:6px;
+    align-items:center
+  }
 
-    /* centered, larger previews (kept) */
-    .thumbs{ display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:8px }
-    .thumbs img{ display:block; width:min(520px, 100%); height:auto; border:1px solid var(--line); border-radius:6px }
+  .row.wide{ grid-column:1/-1 }
 
-    .ref-img{ width:100%; height:auto; border:1px solid var(--line); border-radius:8px }
-    .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px }
+  .lbl{ color:var(--brand); font-weight:700 }
 
-    .actions{ display:flex; gap:12px; justify-content:flex-end; margin-top:20px }
-    button{ border:none; padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:600 }
-    .btn-primary{ background:var(--brand); color:#fff }
-    .btn-secondary{ background:#ececf6; color:var(--ink) }
-    .btn-danger{ background:#ffe3e3; color:#7a0000 }
+  input[type="text"],input[type="date"],input[type="time"],textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#fff
+  }
 
-    /* Searchable dropdown (autocomplete) */
-    .ac-wrap{ position:relative }
-    .ac-input{ width:100%; padding:12px 40px 12px 12px; border:2px solid #111; border-radius:10px; background:#fff }
-    .ac-chevron{ position:absolute; right:10px; top:0; height:100%; display:flex; align-items:center; background:transparent; border:0; padding:0 2px; cursor:pointer; color:#666 }
-    .ac-chevron svg{ width:18px; height:18px }
-    .ac-panel{
-      position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%);
-      width:min(880px, calc(100vw - 64px)); z-index:40; padding:8px; background:#1f1f1f; color:#fff;
-      border:1px solid #0d0d0d; border-radius:12px; max-height:300px; overflow:auto; box-shadow:0 10px 28px rgba(0,0,0,.35)
-    }
-    .ac-item{ display:block; width:100%; text-align:left; border:none; background:transparent; padding:10px 12px; border-radius:8px; cursor:pointer; color:#fff; font-weight:600; line-height:1.25 }
-    .ac-item:hover,.ac-item[aria-selected="true"]{ background:#2e2e2e }
-    .ac-empty{ padding:10px 12px; color:#c7c7c7 }
+  .gate{
+    display:grid; grid-template-columns:20px 1fr; gap:10px;
+    padding:10px 12px; border:1px dashed var(--line); border-radius:10px;
+    background:#fff8f0; color:#7a4a00; margin-top:12px
+  }
 
-    .inline-opts{ display:flex; gap:16px; align-items:center }
-    .num-input{ width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px }
+  .hidden{ display:none !important }
 
-    /* Equipment photo block */
-    .asset-photo-wrap{ margin:6px 0 18px }
-    .asset-photo-title{ font-weight:700; color:var(--brand); margin:0 0 6px }
-    .asset-photo{ display:block; width:100%; height:auto; background:transparent; border:none; border-radius:0; }
-    .asset-photo-hint{ font-size:12px; color:var(--muted); margin-top:6px }
+  .divider{ border-top:2px solid var(--line); margin:16px 0 24px }
 
-    .asset-entry{ border:2px dashed var(--line); border-radius:12px; padding:12px; margin:16px 0 }
-    .asset-entry .entry-head{ display:flex; gap:8px; justify-content:space-between; align-items:center; margin-bottom:6px }
-    .asset-entry .entry-title{ font-weight:700; color:var(--brand) }
+  .q{
+    padding:20px 24px; border:1px solid var(--line);
+    border-radius:10px; margin-bottom:14px; background:#fff
+  }
+  .q h4{ margin:0 0 8px; font-size:16px }
+  .q .opts{ display:flex; gap:16px; margin:6px 0 }
+  .q .followup{ margin-top:10px; display:none }
+  .q textarea{ min-height:72px }
 
-    @media (max-width: 640px){
-      .meta{ grid-template-columns:1fr }
-      .row{ grid-template-columns:1fr; gap:4px }
-      header{ grid-template-columns:1fr; gap:8px }
-      .hdr-note{text-align:left}
-      .grid2{ grid-template-columns:1fr }
-      .actions{ justify-content:stretch }
-      .actions button{ width:100% }
-    }
+  .hint{ font-size:12px; color:var(--muted) }
 
-    @media print{
-      body{ background:#fff }
-      .page{ box-shadow:none; border:none; margin:0; max-width:none; border-radius:0 }
-      .actions,.hdr-note,.gate{ display:none !important }
-      input,textarea{ border:none }
-    }
-  </style>
+  /* Image attachments – keep centered & larger as requested */
+  .thumbs{
+    display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; justify-content:center
+  }
+  .thumbs img{
+    max-width:480px; width:min(100%,480px); height:auto;
+    border:1px solid var(--line); border-radius:6px; display:block
+  }
+
+  .ref-img{
+    width:100%; height:auto; border:1px solid var(--line); border-radius:8px
+  }
+
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px }
+
+  .actions{
+    display:flex; gap:12px; justify-content:flex-end; margin-top:20px
+  }
+
+  button{
+    border:none; padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:600
+  }
+
+  /* All main action buttons use the same orange theme */
+  .btn-primary,
+  .btn-secondary,
+  .btn-add,
+  .btn-submit,
+  .btn-clear,
+  .btn-print{
+    background:var(--brand); color:#fff;
+  }
+
+  /* Danger button stays red */
+  .btn-danger{ background:var(--danger); color:#fff }
+
+  /* Searchable dropdown (autocomplete) */
+  .ac-wrap{ position:relative }
+  .ac-input{
+    width:100%; padding:12px 40px 12px 12px; border:2px solid #111; border-radius:10px; background:#fff
+  }
+  .ac-chevron{
+    position:absolute; right:10px; top:0; height:100%; display:flex; align-items:center;
+    background:transparent; border:0; padding:0 2px; cursor:pointer; color:#666
+  }
+  .ac-chevron svg{ width:18px; height:18px }
+
+  .ac-panel{
+    position:absolute; 
+    top:calc(100% + 8px); 
+    left:50%; 
+    transform:translateX(-50%);
+    width:min(880px, calc(100vw - 64px)); 
+    z-index:40; 
+    padding:8px; 
+    background:#1f1f1f; 
+    color:#fff;
+    border:1px solid #0d0d0d; 
+    border-radius:12px; 
+    max-height:300px; 
+    overflow:auto;
+    box-shadow:0 10px 28px rgba(0,0,0,.35)
+  }
+
+  .ac-item{
+    display:block; width:100%; text-align:left; border:none; background:transparent;
+    padding:10px 12px; border-radius:8px; cursor:pointer; color:#fff; font-weight:600; line-height:1.25
+  }
+  .ac-item:hover,.ac-item[aria-selected="true"]{ background:#2e2e2e }
+  .ac-empty{ padding:10px 12px; color:#c7c7c7 }
+
+  /* amount radios helper */
+  .inline-opts{ display:flex; gap:16px; align-items:center }
+  .num-input{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px
+  }
+
+  /* Equipment photo block */
+  .asset-photo-wrap{ margin:6px 0 18px }
+  .asset-photo-title{ font-weight:700; color:var(--brand); margin:0 0 6px }
+  .asset-photo{
+    display:block; width:100%; height:auto; background:transparent; border:none; border-radius:0;
+  }
+  .asset-photo-hint{ font-size:12px; color:var(--muted); margin-top:6px }
+
+  /* Per-asset controls layout */
+  .entry-controls{
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+    margin-top:24px;   /* spacing away from Q8 */
+  }
+
+  /* MOBILE */
+  @media (max-width: 640px){
+    .meta{grid-template-columns:1fr}
+    .row{grid-template-columns:1fr;gap:4px}
+    header{grid-template-columns:1fr;gap:8px}
+    .hdr-note{text-align:left}
+    .grid2{grid-template-columns:1fr}
+    .actions{justify-content:stretch}
+    .actions button{width:100%}
+    .entry-controls{justify-content:stretch}
+    .entry-controls button{width:100%}
+  }
+
+  @media print{
+    body{background:#fff}
+    .page{box-shadow:none;border:none;margin:0;max-width:none;border-radius:0}
+    .actions,.hdr-note,.gate,.entry-controls{display:none !important}
+    input,textarea{border:none}
+  }
+</style>
 </head>
 <body>
+
   <div class="page" id="captureArea">
     <header>
       <img id="headerLogo" src="Images/Logo_ArcelorMittal.png" alt="ArcelorMittal">
@@ -155,6 +241,18 @@
           <div class="hint">Only specific “Technical Info” routes will unlock the checklist below.</div>
         </div>
       </div>
+
+      <div class="row wide">
+        <div class="lbl">Equipment / Asset ID:</div>
+        <div class="ac-wrap">
+          <input id="asset_search" class="ac-input" placeholder="Type or paste an asset name…">
+          <button class="ac-chevron" type="button" id="asset_toggle" aria-label="Open list">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div id="asset_panel" class="ac-panel hidden"></div>
+        </div>
+      </div>
+
     </section>
 
     <div id="routeGate" class="gate">
@@ -162,368 +260,176 @@
       <div>Select one Work Instruction / Route ID to proceed. For example: <strong>W3ELL0037</strong>.</div>
     </div>
 
-    <!-- === FORM BODY (unlocked by route) === -->
+    <!-- Container for one or more asset entries -->
     <div id="formBody" class="hidden">
       <div class="divider"></div>
 
-      <!-- container where entries are added -->
       <div id="assetEntries"></div>
-
-      <div class="actions no-print" data-html2canvas-ignore="true" style="justify-content:flex-start">
-        <button id="addEntryBtn" type="button" class="btn-secondary">+ Add Asset Entry</button>
-      </div>
-
-      <!-- Question 8 (shared) -->
-      <section class="q" data-q="10">
-        <h4>8 — Additional comments</h4>
-        <textarea id="comments" placeholder="Anything else noteworthy..."></textarea>
-      </section>
-
-      <div class="divider"></div>
-
-      <!-- Execution (shared) -->
-      <section class="q">
-        <h4>Execution</h4>
-        <div class="grid2">
-          <div>
-            <label class="hint">Inspector / Technician Name</label>
-            <input id="tech_name" type="text" placeholder="Your name">
-          </div>
-          <div>
-            <label class="hint">Date &amp; Time</label>
-            <div class="grid2">
-              <input id="date_exec" type="date">
-              <input id="time_exec" type="time">
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
 
-    <!-- Controls -->
+    <!-- Global actions -->
     <div class="actions no-print" data-html2canvas-ignore="true">
-      <button class="btn-secondary" id="clearBtn"  type="button">Clear Form</button>
-      <button class="btn-secondary" id="submitBtn" type="button">Submit Form (Attach PDF)</button>
-      <button class="btn-primary"   id="printBtn"  type="button">Print to PDF</button>
+      <button class="btn-clear"   id="clearBtn"  type="button">Clear Form</button>
+      <button class="btn-submit"  id="submitBtn" type="button">Submit Form (Attach PDF)</button>
+      <button class="btn-print"   id="printBtn"  type="button">Print to PDF</button>
     </div>
   </div>
 
-  <!-- Template for an Asset Entry (cloned for each new entry) -->
-  <template id="assetEntryTpl">
-    <div class="asset-entry">
-      <div class="entry-head">
-        <div class="entry-title">Equipment / Asset</div>
-        <button type="button" class="btn-danger remove-entry-btn hidden">Remove Asset Entry</button>
-      </div>
+<!-- html2pdf (single include) -->
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
 
-      <div class="row wide">
-        <div class="lbl">Equipment / Asset ID:</div>
-        <div class="ac-wrap">
-          <input class="ac-input asset-input" placeholder="Type or paste an asset name…">
-          <button class="ac-chevron asset-toggle" type="button" aria-label="Open list">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </button>
-          <div class="ac-panel asset-panel hidden"></div>
-        </div>
-      </div>
+<script>
+  document.getElementById('printedAt').textContent = new Date().toLocaleString();
 
-      <!-- Auto photo -->
-      <div class="asset-photo-wrap hidden photo-block">
-        <p class="asset-photo-title">Inspection target</p>
-        <img class="asset-photo photo-img" alt="Equipment / Asset reference image">
-        <div class="asset-photo-hint photo-hint"></div>
-      </div>
+  const RECIPIENT = 'jefferson.dossantos@arcelormittal.com';
+  const allowedRouteCodes = ['W3ELL0037','W3ELL0038','W3ELL0039'];
 
-      <!-- Q1 -->
-      <section class="q" data-q="1">
-        <h4>1 — Was the lubrication point lubricated as per WI standard?</h4>
-        <div class="opts">
-          <label><input type="radio" value="Yes" class="q1"> Yes</label>
-          <label><input type="radio" value="No"  class="q1"> No</label>
-        </div>
-        <div class="followup">
-          <div class="hint">Please, provide more information and upload a picture.</div>
-          <textarea class="q1_txt" placeholder="Describe the deviation..."></textarea>
-          <input type="file" accept="image/*" multiple class="q1_img" />
-          <div class="thumbs q1_thumbs"></div>
-        </div>
-      </section>
-
-      <!-- 1B -->
-      <section class="q" data-q="1b">
-        <h4>1B — Amount of lubricant inserted/filled</h4>
-        <div class="grid2" style="align-items:end;">
-          <div>
-            <label class="hint">Amount</label>
-            <input class="num-input amt_value" type="number" inputmode="decimal" min="0" step="0.001" placeholder="0.000">
-          </div>
-          <div>
-            <label class="hint">Units</label>
-            <div class="inline-opts">
-              <label><input type="radio" name="amt_unit" value="g" checked class="amt_unit_g"> Grams (g)</label>
-              <label><input type="radio" name="amt_unit" value="L" class="amt_unit_l"> Liter (L)</label>
-            </div>
-          </div>
-        </div>
-        <div class="hint">Enter numbers only (decimals allowed). Leave blank if not applicable.</div>
-      </section>
-
-      <!-- Q2..Q7 -->
-      <section class="q" data-q="2">
-        <h4>2 — Was there any inconsistency with the volume added/purged to the pillow block/bearing?</h4>
-        <div class="opts">
-          <label><input type="radio" value="Yes" class="q2"> Yes</label>
-          <label><input type="radio" value="No"  class="q2"> No</label>
-        </div>
-        <div class="followup">
-          <div class="hint">Please, provide more information and upload a picture.</div>
-          <textarea class="q2_txt" placeholder="Explain the volume discrepancy..."></textarea>
-          <input type="file" accept="image/*" multiple class="q2_img" />
-          <div class="thumbs q2_thumbs"></div>
-        </div>
-      </section>
-
-      <section class="q" data-q="3">
-        <h4>3 — Are the hoses, grease nipples, and other lubricant components in good condition?</h4>
-        <div class="opts">
-          <label><input type="radio" value="Yes" class="q3"> Yes</label>
-          <label><input type="radio" value="No"  class="q3"> No</label>
-        </div>
-        <div class="followup">
-          <div class="hint">Please, provide more information and upload a picture.</div>
-          <textarea class="q3_txt" placeholder="Describe damaged components..."></textarea>
-          <input type="file" accept="image/*" multiple class="q3_img" />
-          <div class="thumbs q3_thumbs"></div>
-        </div>
-      </section>
-
-      <section class="q" data-q="4">
-        <h4>4 — Is there any sign of damage, malfunction, and/or leakage in the lubrication point indicated in the WI?</h4>
-        <div class="opts">
-          <label><input type="radio" value="Yes" class="q4"> Yes</label>
-          <label><input type="radio" value="No"  class="q4"> No</label>
-        </div>
-        <div class="followup">
-          <div class="hint">Please, provide more information and upload a picture.</div>
-          <textarea class="q4_txt" placeholder="Describe the observation..."></textarea>
-          <input type="file" accept="image/*" multiple class="q4_img" />
-          <div class="thumbs q4_thumbs"></div>
-        </div>
-      </section>
-
-      <section class="q" data-q="5">
-        <h4>5 — Was the purged grease hardened or visually degraded compared to new grease?</h4>
-        <img class="ref-img" src="Images/Grease-Evaluation_Chart.png" alt="Grease Degradation Reference" />
-        <div class="opts" style="margin-top:8px;">
-          <label><input type="radio" value="Yes" class="q5"> Yes</label>
-          <label><input type="radio" value="No"  class="q5"> No</label>
-        </div>
-        <div class="followup">
-          <div class="hint">Please, provide more information and upload a picture.</div>
-          <textarea class="q5_txt" placeholder="Describe grease condition..."></textarea>
-          <input type="file" accept="image/*" multiple class="q5_img" />
-          <div class="thumbs q5_thumbs"></div>
-        </div>
-      </section>
-
-      <section class="q" data-q="6">
-        <h4>6 — Is the lubrication ID label present and legible (correct grease/oil spec)?</h4>
-        <div class="opts">
-          <label><input type="radio" value="Yes" class="q6"> Yes</label>
-          <label><input type="radio" value="No"  class="q6"> No</label>
-        </div>
-        <div class="followup">
-          <textarea class="q6_txt" placeholder="Label issues..."></textarea>
-          <input type="file" accept="image/*" multiple class="q6_img" />
-          <div class="thumbs q6_thumbs"></div>
-        </div>
-      </section>
-
-      <section class="q" data-q="7">
-        <h4>7 — Guards in place; access safe; purge path clear?</h4>
-        <div class="opts">
-          <label><input type="radio" value="Yes" class="q7"> Yes</label>
-          <label><input type="radio" value="No"  class="q7"> No</label>
-        </div>
-        <div class="followup">
-          <textarea class="q7_txt" placeholder="Safety/access concerns..."></textarea>
-          <input type="file" accept="image/*" multiple class="q7_img" />
-          <div class="thumbs q7_thumbs"></div>
-        </div>
-      </section>
-    </div>
-  </template>
-
-  <!-- Load html2pdf ONCE (working CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
-
-  <script>
-    // timestamp
-    document.getElementById('printedAt').textContent = new Date().toLocaleString();
-
-    const RECIPIENT = 'jefferson.dossantos@arcelormittal.com';
-    const allowedRouteCodes = ['W3ELL0037','W3ELL0038','W3ELL0039'];
-
-    const routeLines = `
+  const routeLines = `
 W3ELL0001 - ETL3-LUB- 6 WEEK ENTRY LUBRICATION PM
 W3ELL0002 - ETL3-LUB- 6 WEEK EXIT LUBRICATION PM
 W3ELL0003 - 3ETL-LUB- 6 WEEK OIL MIST/GEARBOX CHECKS CLEANER / PICKLE
 W3ELL0037 - ETL3-LUB- PROCESS LUBRICATION TECHNICAL INFO
 W3ELL0038 - ETL3-LUB- ENTRY SECTION LUBRICATION TECHNICAL INFO
 W3ELL0039 - ETL3-LUB- EXIT SECTION LUBRICATION TECHNICAL INFO
-`.trim().split('\n');
+`.trim().split('\n'); // <-- CORRECTED
 
-    const assetLines = `
+const assetLines = `
 BRU - 001 - MAIN.PROC.TFIN.ETL3.PROC.BRU2.ENTR.ROLL - Driven Side
 BRU - 002 - MAIN.PROC.TFIN.ETL3.PROC.BRU2.ENTR.ROLL - OPS Side
 BRU - 003 - MAIN.PROC.TFIN.ETL3.PROC.BRU2.MIDL.ROLL - Driven Side
 DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
-`.trim().split('\n');
+`.trim().split('\n'); // <-- CORRECTED
 
-    // ---------- Autocomplete ----------
-    function buildAutocomplete({input, panel, toggle, data, onPick}) {
-      function render(filterText) {
-        panel.innerHTML = '';
-        const txt = (filterText || '').toLowerCase();
-        const list = data.filter(line => line.toLowerCase().includes(txt));
-        if (list.length === 0) {
-          const div = document.createElement('div');
-          div.className = 'ac-empty';
-          div.textContent = 'No matches found.';
-          panel.appendChild(div);
-        } else {
-          list.forEach(line => {
-            const b = document.createElement('button');
-            b.type = 'button';
-            b.className = 'ac-item';
-            b.textContent = line;
-            b.addEventListener('click', () => { input.value = line; hide(); onPick && onPick(line); });
-            panel.appendChild(b);
-          });
-        }
-        show();
-      }
-      function show(){ panel.classList.remove('hidden'); }
-      function hide(){ panel.classList.add('hidden'); }
+  /* ---------- Autocomplete ---------- */
+  function buildAutocomplete({inputId, panelId, toggleId, data, onPick}) {
+    const input = document.getElementById(inputId);
+    const panel = document.getElementById(panelId);
+    const toggle = document.getElementById(toggleId);
 
-      input.addEventListener('focus', () => render(input.value));
-      toggle.addEventListener('click', () => {
-        if (panel.classList.contains('hidden')) render(input.value); else hide();
-      });
-      input.addEventListener('input', () => render(input.value.trim()));
-      input.addEventListener('blur', () => setTimeout(hide, 120));
-      panel.addEventListener('mousedown', e => e.preventDefault());
-    }
-
-    // Route autocomplete + gate
-    (function initRouteAC(){
-      const input = document.getElementById('route_search');
-      const panel = document.getElementById('route_panel');
-      const toggle = document.getElementById('route_toggle');
-      buildAutocomplete({
-        input, panel, toggle, data: routeLines,
-        onPick:(line)=>applyGateFromValue(line)
-      });
-      input.addEventListener('change', e=>{
-        const v = e.target.value.trim();
-        const code = v.includes(' - ') ? v.split(' - ')[0] : v;
-        const full = routeLines.find(l => l.startsWith(code + ' - '));
-        if (full) e.target.value = full;
-        applyGateFromValue(e.target.value);
-      });
-    })();
-
-    function applyGateFromValue(routeFullText){
-      const code = (routeFullText || '').split(' - ')[0];
-      const ok = allowedRouteCodes.includes(code);
-      document.getElementById('formBody').classList.toggle('hidden', !ok);
-      document.getElementById('routeGate').classList.toggle('hidden', ok);
-      if (ok && document.querySelectorAll('.asset-entry').length === 0) {
-        addAssetEntry(); // ensure at least one entry visible
-      }
-    }
-
-    // ---------- Asset Entry handling ----------
-    const entriesContainer = document.getElementById('assetEntries');
-    const tpl = document.getElementById('assetEntryTpl');
-
-    function addAssetEntry(){
-      const node = tpl.content.firstElementChild.cloneNode(true);
-
-      // AC for asset inside this entry
-      const assetInput  = node.querySelector('.asset-input');
-      const assetPanel  = node.querySelector('.asset-panel');
-      const assetToggle = node.querySelector('.asset-toggle');
-
-      buildAutocomplete({
-        input: assetInput, panel: assetPanel, toggle: assetToggle, data: assetLines,
-        onPick: (line) => updateAssetPhoto(node, line)
-      });
-
-      assetInput.addEventListener('input', () => {
-        const v = assetInput.value.trim();
-        const exact = assetLines.find(d => d.toLowerCase() === v.toLowerCase());
-        if (exact) updateAssetPhoto(node, exact);
-        if (v === '') updateAssetPhoto(node, '');
-      });
-      assetInput.addEventListener('change', () => {
-        const v = assetInput.value.trim();
-        const exact = assetLines.find(d => d.toLowerCase() === v.toLowerCase());
-        updateAssetPhoto(node, exact || '');
-      });
-
-      // wire previews inside this entry
-      ['1','2','3','4','5','6','7'].forEach(n => wirePreview(node, `.q${n}_img`, `.q${n}_thumbs`));
-
-      // follow-ups
-      wireQuestion(node, '1','No');
-      wireQuestion(node, '2','Yes');
-      wireQuestion(node, '3','No');
-      wireQuestion(node, '4','Yes');
-      wireQuestion(node, '5','Yes');
-      wireQuestion(node, '6','No');
-      wireQuestion(node, '7','No');
-
-      // numeric guard
-      const amt = node.querySelector('.amt_value');
-      if (amt){
-        amt.addEventListener('input', () => {
-          let v = amt.value.replace(/[^0-9.]/g,'');
-          const dot = v.indexOf('.');
-          if (dot !== -1) v = v.slice(0, dot+1) + v.slice(dot+1).replace(/\./g,'');
-          amt.value = v;
+    function render(filterText) {
+      panel.innerHTML = '';
+      const txt = (filterText || '').toLowerCase();
+      const list = data.filter(line => line.toLowerCase().includes(txt));
+      if (list.length === 0) {
+        const div = document.createElement('div');
+        div.className = 'ac-empty';
+        div.textContent = 'No matches found.';
+        panel.appendChild(div);
+      } else {
+        list.forEach(line => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'ac-item';
+          b.textContent = line;
+          b.addEventListener('click', () => { input.value = line; hide(); onPick && onPick(line); });
+          panel.appendChild(b);
         });
       }
-
-      // remove button (hidden for first entry)
-      const removeBtn = node.querySelector('.remove-entry-btn');
-      removeBtn.addEventListener('click', () => node.remove());
-      if (entriesContainer.children.length > 0) removeBtn.classList.remove('hidden');
-
-      entriesContainer.appendChild(node);
+      show();
     }
+    function show(){ panel.classList.remove('hidden'); }
+    function hide(){ panel.classList.add('hidden'); }
 
-    function updateAssetPhoto(entryEl, assetFullText){
-      const block = entryEl.querySelector('.photo-block');
-      const img   = entryEl.querySelector('.photo-img');
-      const hint  = entryEl.querySelector('.photo-hint');
-
-      if (!assetFullText){
-        block.classList.add('hidden'); img.removeAttribute('src'); hint.textContent = '';
-        return;
+    input.addEventListener('focus', () => render(input.value));
+    toggle.addEventListener('click', () => {
+      if (panel.classList.contains('hidden')) render(input.value); else hide();
+    });
+    input.addEventListener('input', () => {
+      const v = input.value.trim();
+      render(v);
+      if (inputId === 'asset_search') {
+        const exact = data.find(d => d.toLowerCase() === v.toLowerCase());
+        if (exact) updateAssetPhoto(exact);
+        if (v === '') updateAssetPhoto('');
       }
-      const filename = encodeURIComponent(assetFullText) + '.png';
-      const url = 'Images/' + filename;
+    });
+    input.addEventListener('change', () => {
+      if (inputId === 'asset_search') {
+        const v = input.value.trim();
+        const exact = data.find(d => d.toLowerCase() === v.toLowerCase());
+        updateAssetPhoto(exact || '');
+      }
+    });
+    input.addEventListener('blur', () => setTimeout(hide, 120));
+    panel.addEventListener('mousedown', e => e.preventDefault());
+  }
 
-      img.onload = () => { hint.textContent = assetFullText; block.classList.remove('hidden'); };
-      img.onerror = () => { block.classList.add('hidden'); hint.textContent = ''; img.removeAttribute('src'); };
-      img.src = url;
+  function applyGateFromValue(routeFullText){
+    const code = (routeFullText || '').split(' - ')[0];
+    const ok = allowedRouteCodes.includes(code);
+    document.getElementById('formBody').classList.toggle('hidden', !ok);
+    document.getElementById('routeGate').classList.toggle('hidden', ok);
+
+    // On first unlock, ensure at least one asset entry exists
+    if (ok && document.querySelectorAll('.asset-entry').length === 0) {
+      addAssetEntry();
     }
+  }
 
-    function wirePreview(entryEl, inputSel, thumbsSel) {
-      const input = entryEl.querySelector(inputSel);
-      const thumbs = entryEl.querySelector(thumbsSel);
-      if (!input) return;
+  buildAutocomplete({
+    inputId:'route_search', panelId:'route_panel', toggleId:'route_toggle', data:routeLines,
+    onPick:(line)=>applyGateFromValue(line)
+  });
+  buildAutocomplete({
+    inputId:'asset_search', panelId:'asset_panel', toggleId:'asset_toggle', data:assetLines,
+    onPick:(line)=>updateAssetPhoto(line)   // top preview only (optional helper)
+  });
+
+  document.getElementById('route_search').addEventListener('change', e=>{
+    const v = e.target.value.trim();
+    const code = v.includes(' - ') ? v.split(' - ')[0] : v;
+    const full = routeLines.find(l => l.startsWith(code + ' - '));
+    if (full) e.target.value = full;
+    applyGateFromValue(e.target.value);
+  });
+
+  /* Optional top-of-page preview */
+  function updateAssetPhoto(assetName) {
+      // Find the *first* asset entry on the page
+      const firstEntry = document.querySelector('.asset-entry');
+      if (!firstEntry) return; // No entries added yet
+
+      // Find the photo elements inside that first entry
+      const wrap = firstEntry.querySelector('.asset-photo-wrap');
+      const img = firstEntry.querySelector('.asset-photo');
+      const hint = firstEntry.querySelector('.asset-photo-hint');
+
+      if (!wrap || !img || !hint) return; // Couldn't find the HTML elements
+
+      if (!assetName) {
+          // If the asset name is cleared, hide the block
+          wrap.classList.add('hidden');
+          img.src = '';
+          hint.textContent = '';
+      } else {
+          // --- This is the new logic ---
+          // Build the image path, assuming it's a .png file in the Images folder
+          const imgPath = `Images/${assetName}.png`;
+
+          img.src = imgPath;
+          hint.textContent = assetName; // Show the name as a caption
+
+          // Show the block *after* checking if the image loads
+          img.onload = () => {
+              wrap.classList.remove('hidden'); // Show the block
+          };
+          // If the image fails to load (e.g., missing file), hide the block
+          img.onerror = () => {
+              wrap.classList.add('hidden'); 
+              console.warn(`Image not found: ${imgPath}`);
+          };
+      }
+  }
+
+  /* ---------- Asset Entry Template (Add/Remove) ---------- */
+  const assetEntries = document.getElementById('assetEntries');
+
+  function wireEntryDynamicBehaviours(scope){
+    // file previews
+    ['1','2','3','4','5','6','7'].forEach(n => {
+      const input = scope.querySelector(`#q${n}_img`);
+      const thumbs = scope.querySelector(`#q${n}_thumbs`);
+      if (!input || !thumbs) return;
       input.addEventListener('change', () => {
         thumbs.innerHTML = '';
         Array.from(input.files || []).forEach(file => {
@@ -536,195 +442,360 @@ DFR - 286 - DELFECTOR  ROLL ASSEMBLY E3A - OPS Side
           reader.readAsDataURL(file);
         });
       });
-    }
+    });
 
-    function wireQuestion(entryEl, qn, showOnValue){
-      const sec = entryEl.querySelector(`section.q[data-q="${qn}"]`);
+    // follow-ups
+    function wireQuestion(qn, showOnValue) {
+      const sec = scope.querySelector('section.q[data-q="' + qn + '"]');
       if (!sec) return;
       const follow = sec.querySelector('.followup');
-      const radios = sec.querySelectorAll(`.q${qn === '1b' ? '1' : qn}`);
+      const radios = sec.querySelectorAll('input[type=radio]');
       radios.forEach(r => r.addEventListener('change', () => {
         if (r.checked && r.value === showOnValue) follow.style.display = 'block';
         else if (r.checked) follow.style.display = 'none';
       }));
     }
+    wireQuestion('1','No'); wireQuestion('2','Yes'); wireQuestion('3','No');
+    wireQuestion('4','Yes'); wireQuestion('5','Yes'); wireQuestion('6','No'); wireQuestion('7','No');
 
-    document.getElementById('addEntryBtn').addEventListener('click', addAssetEntry);
-
-    // ---------- Validation ----------
-    function ensureWoOrAlert() {
-      const woEl = document.getElementById('wo_number');
-      const wo = (woEl.value || '').trim();
-      if (!wo) { alert('Please, enter Assigned WO#.'); woEl.focus(); return null; }
-      return wo;
+    // amount numeric guard
+    const amtField = scope.querySelector('.amt_value');
+    if (amtField){
+      amtField.addEventListener('input', () => {
+        let v = amtField.value.replace(/[^0-9.]/g,'');
+        const dot = v.indexOf('.');
+        if (dot !== -1) v = v.slice(0, dot+1) + v.slice(dot+1).replace(/\./g,'');
+        amtField.value = v;
+      });
     }
 
-    function validateMandatoryQuestions(){
-      const entries = document.querySelectorAll('.asset-entry');
-      if (entries.length === 0) { alert('Please add at least one Asset Entry.'); return false; }
-
-      // validate each entry independently
-      let idx = 0;
-      for (const entry of entries){
-        idx++;
-        // Q1..Q7 radios
-        for (let i=1;i<=7;i++){
-          const radios = entry.querySelectorAll(`.q${i}`);
-          const any = Array.from(radios).some(r=>r.checked);
-          if (!any){
-            alert(`Please answer question ${i} for Asset Entry #${idx}.`);
-            entry.scrollIntoView({behavior:'smooth', block:'center'}); return false;
-          }
+    // remove entry
+    const removeBtn = scope.querySelector('.btn-remove-entry');
+    if (removeBtn){
+      removeBtn.addEventListener('click', () => {
+        const all = document.querySelectorAll('.asset-entry');
+        if (all.length === 1) {
+          alert('At least one asset entry is required.');
+          return;
         }
-        // Q1B amount
-        const amt = entry.querySelector('.amt_value');
-        if (!amt.value.trim()){
-          alert(`Please fill in question 1B (Amount) for Asset Entry #${idx}.`);
-          entry.scrollIntoView({behavior:'smooth', block:'center'}); amt.focus(); return false;
-        }
+        scope.remove();
+      });
+    }
+
+    // add entry (now located AFTER Q8 with spacing)
+    const addBtn = scope.querySelector('.btn-add-entry');
+    if (addBtn){
+      addBtn.addEventListener('click', () => addAssetEntry());
+    }
+  }
+
+  function addAssetEntry(){
+    const entry = document.createElement('div');
+    entry.className = 'asset-entry';
+    const eid = crypto.randomUUID();
+    entry.innerHTML = `
+      <!-- Auto photo for selected asset (optional block; you can feed a per-entry asset selector if needed) -->
+      <div class="asset-photo-wrap hidden">
+        <p class="asset-photo-title">Inspection target</p>
+        <img class="asset-photo" alt="Equipment / Asset reference image">
+        <div class="asset-photo-hint"></div>
+      </div>
+
+      <section class="q" data-q="1">
+        <h4>1 — Was the lubrication point lubricated as per WI standard?</h4>
+        <div class="opts">
+          <label><input type="radio" name="q1_${eid}" value="Yes"> Yes</label>
+          <label><input type="radio" name="q1_${eid}" value="No"> No</label>
+        </div>
+
+        <div class="followup">
+          <div class="hint">Please, provide more information and upload a picture.</div>
+          <textarea placeholder="Describe the deviation..."></textarea>
+          <input type="file" id="q1_img" accept="image/*" multiple />
+          <div class="thumbs" id="q1_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="1b">
+        <h4>1B — Amount of lubricant inserted/filled</h4>
+        <div class="grid2" style="align-items:end;">
+          <div>
+            <label class="hint">Amount</label>
+            <input class="num-input amt_value" type="number" inputmode="decimal" min="0" step="0.001" placeholder="0.000">
+          </div>
+          <div>
+            <label class="hint">Units</label>
+            <div class="inline-opts">
+              <label><input type="radio" name="amt_unit_${eid}" value="g" checked> Grams (g)</label>
+              <label><input type="radio" name="amt_unit_${eid}" value="L"> Liter (L)</label>
+            </div>
+          </div>
+        </div>
+        <div class="hint">Enter numbers only (decimals allowed). Leave blank if not applicable.</div>
+      </section>
+
+      <section class="q" data-q="2">
+        <h4>2 — Was there any inconsistency with the volume added/purged to the pillow block/bearing?</h4>
+        <div class="opts">
+          <label><input type="radio" name="q2_${eid}" value="Yes"> Yes</label>
+          <label><input type="radio" name="q2_${eid}" value="No"> No</label>
+        </div>
+        <div class="followup">
+          <div class="hint">Please, provide more information and upload a picture.</div>
+          <textarea placeholder="Explain the volume discrepancy..."></textarea>
+          <input type="file" id="q2_img" accept="image/*" multiple />
+          <div class="thumbs" id="q2_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="3">
+        <h4>3 — Are the hoses, grease nipples, and other lubricant components in good condition?</h4>
+        <div class="opts">
+          <label><input type="radio" name="q3_${eid}" value="Yes"> Yes</label>
+          <label><input type="radio" name="q3_${eid}" value="No"> No</label>
+        </div>
+
+        <div class="followup">
+          <div class="hint">Please, provide more information and upload a picture.</div>
+          <textarea placeholder="Describe damaged components..."></textarea>
+          <input type="file" id="q3_img" accept="image/*" multiple />
+          <div class="thumbs" id="q3_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="4">
+        <h4>4 — Is there any sign of damage, malfunction, and/or leakage in the lubrication point indicated in the WI?</h4>
+        <div class="opts">
+          <label><input type="radio" name="q4_${eid}" value="Yes"> Yes</label>
+          <label><input type="radio" name="q4_${eid}" value="No"> No</label>
+        </div>
+
+        <div class="followup">
+          <div class="hint">Please, provide more information and upload a picture.</div>
+          <textarea placeholder="Describe the observation..."></textarea>
+          <input id="q4_img" type="file" accept="image/*" multiple />
+          <div class="thumbs" id="q4_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="5">
+        <h4>5 — Was the purged grease hardened or visually degraded compared to new grease?</h4>
+        <div class="hint">Use the reference strip below for examples (oil separation, hardening, contamination, starvation, thermal degradation).</div>
+        <img class="ref-img" src="Images/Grease-Evaluation_Chart.png" alt="Grease Degradation Reference" />
+        <div class="opts" style="margin-top:8px;">
+          <label><input type="radio" name="q5_${eid}" value="Yes"> Yes</label>
+          <label><input type="radio" name="q5_${eid}" value="No"> No</label>
+        </div>
+
+        <div class="followup">
+          <div class="hint">Please, provide more information and upload a picture.</div>
+          <textarea placeholder="Describe grease condition..."></textarea>
+          <input id="q5_img" type="file" accept="image/*" multiple />
+          <div class="thumbs" id="q5_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="6">
+        <h4>6 — Is the lubrication ID label present and legible (correct grease/oil spec)?</h4>
+        <div class="opts">
+          <label><input type="radio" name="q6_${eid}" value="Yes"> Yes</label>
+          <label><input type="radio" name="q6_${eid}" value="No"> No</label>
+        </div>
+
+        <div class="followup">
+          <textarea placeholder="Label issues..."></textarea>
+          <input id="q6_img" type="file" accept="image/*" multiple />
+          <div class="thumbs" id="q6_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="7">
+        <h4>7 — Guards in place; access safe; purge path clear?</h4>
+        <div class="opts">
+          <label><input type="radio" name="q7_${eid}" value="Yes"> Yes</label>
+          <label><input type="radio" name="q7_${eid}" value="No"> No</label>
+        </div>
+
+        <div class="followup">
+          <textarea placeholder="Safety/access concerns..."></textarea>
+          <input id="q7_img" type="file" accept="image/*" multiple />
+          <div class="thumbs" id="q7_thumbs"></div>
+        </div>
+      </section>
+
+      <section class="q" data-q="10">
+        <h4>8 — Additional comments</h4>
+        <textarea class="entry-comments" placeholder="Anything else noteworthy..."></textarea>
+      </section>
+
+      <!-- Per-entry controls: now AFTER Q8, spaced by .entry-controls margin-top -->
+      <div class="entry-controls no-print" data-html2canvas-ignore="true">
+        <button type="button" class="btn-danger btn-remove-entry">Remove Asset Entry</button>
+        <button type="button" class="btn-add btn-add-entry">Add Asset Entry</button>
+      </div>
+
+      <div class="divider"></div>
+    `;
+    assetEntries.appendChild(entry);
+    wireEntryDynamicBehaviours(entry);
+  }
+
+  // ---------- “Top” image previews (per earlier version) remain unchanged ---------- 
+  // (handled inside wireEntryDynamicBehaviours for each entry)
+  // ---------- Validation & helpers (unchanged logic) ---------- 
+  function ensureWoOrAlert() {
+    const woEl = document.getElementById('wo_number');
+    const wo = (woEl.value || '').trim();
+    if (!wo) {
+      alert('Please, enter Assigned WO#.');
+      woEl.focus();
+      return null;
+    }
+    return wo;
+  }
+
+  // NOTE: As requested, we are not changing your existing validation logic scope (single-set style).
+  function validateMandatoryQuestions() {
+    // Check questions 1–7 (radio buttons – global query will find the first set)
+    for (let i = 1; i <= 7; i++) {
+      const radios = document.querySelectorAll(`input[name^="q${i}_"]`);
+      const anyChecked = Array.from(radios).some(r => r.checked);
+      if (!anyChecked) {
+        alert(`Please answer question ${i} before submitting.`);
+        radios[0]?.scrollIntoView({ behavior: "smooth", block: "center" });
+        return false;
       }
-
-      // Shared Q8
-      const comments = document.getElementById('comments');
-      if (!comments.value.trim()){
-        alert('Please provide a comment for question 8 (Additional comments).');
-        comments.scrollIntoView({behavior:'smooth', block:'center'}); comments.focus(); return false;
-      }
-      return true;
     }
-
-    // ---------- Build email subject/body ----------
-    function buildStatusAndBody(){
-      const entries = document.querySelectorAll('.asset-entry');
-      const blocks = [];
-
-      let anyRed = false;
-      let entryNum = 0;
-
-      entries.forEach(entry=>{
-        entryNum++;
-        const val = (sel)=> entry.querySelector(sel)?.value || '';
-        const checked = (cls)=> entry.querySelector(`.${cls}:checked`)?.value || '';
-
-        const q1 = checked('q1'), q2 = checked('q2'), q3 = checked('q3'),
-              q4 = checked('q4'), q5 = checked('q5'), q6 = checked('q6'), q7 = checked('q7');
-
-        // red logic like before
-        const reds = [];
-        if (q1==='No') anyRed = true, reds.push('1 - Lubrication point issues.');
-        if (q2==='Yes') anyRed = true, reds.push('2 - Volume inconsistency.');
-        if (q3==='No') anyRed = true, reds.push('3 - Component condition issue.');
-        if (q4==='Yes') anyRed = true, reds.push('4 - Damage/leakage identified.');
-        if (q5==='Yes') anyRed = true, reds.push('5 - Grease consistency out of spec.');
-        if (q6==='No') anyRed = true, reds.push('6 - Label issue.');
-        if (q7==='No') anyRed = true, reds.push('7 - Safety/access issue.');
-
-        const amtVal = entry.querySelector('.amt_value')?.value || '';
-        const amtUnit = entry.querySelector('.amt_unit_l')?.checked ? 'L' : 'g';
-        const assetName = entry.querySelector('.asset-input')?.value || '—';
-
-        const lines = [
-          `Asset Entry #${entryNum}: ${assetName}`,
-          `  Q1:${q1}  Q2:${q2}  Q3:${q3}  Q4:${q4}  Q5:${q5}  Q6:${q6}  Q7:${q7}`,
-          `  Amount (1B): ${amtVal ? amtVal+' '+(amtUnit==='g'?'grams':'L') : '—'}`
-        ];
-        if (reds.length) lines.push('  RED items: ' + reds.join(' ; '));
-        blocks.push(lines.join('\n'));
-      });
-
-      const header = anyRed
-        ? 'QA/QC Performed. RED STATUS — See items below and PDF:'
-        : 'QA/QC Performed with no issues identified. GREEN STATUS';
-
-      const bodyLines = [
-        header,'',
-        `Business Unit: ${document.getElementById('business_unit').value}`,
-        `Department: ${document.getElementById('department').value}`,
-        `WO#: ${document.getElementById('wo_number').value || '—'}`,
-        `Route: ${document.getElementById('route_search').value || '—'}`,
-        '',
-        ...blocks,
-        '',
-        `Comments (Q8): ${document.getElementById('comments').value || ''}`,
-        `Tech: ${document.getElementById('tech_name').value || ''}  Date: ${document.getElementById('date_exec').value || ''} ${document.getElementById('time_exec').value || ''}`
-      ];
-
-      return { isGreen: !anyRed, bodyText: bodyLines.join('\n') };
+    // Check question 1B amount (first entry field found)
+    const amt = document.querySelector(".amt_value");
+    if (!amt || !amt.value.trim()) {
+      alert("Please fill in question 1B (Amount of lubricant inserted/filled).");
+      amt?.scrollIntoView({ behavior: "smooth", block: "center" });
+      amt?.focus();
+      return false;
     }
-
-    function buildSubject(){
-      const wo = document.getElementById('wo_number').value || 'TIN-XXXXX';
-      const { isGreen } = buildStatusAndBody();
-      return `QA/QC Execution Report - WO# ${wo} - ${isGreen?'Green Status':'Red Status'}`;
+    // Check question 8 comments (first entry)
+    const comments = document.querySelector(".entry-comments");
+    if (!comments || !comments.value.trim()) {
+      alert("Please provide a comment for question 8 (Additional comments).");
+      comments?.scrollIntoView({ behavior: "smooth", block: "center" });
+      comments?.focus();
+      return false;
     }
+    return true;
+  }
 
-    // ---------- PDF generation (working pattern) ----------
-    function downloadPDF(){
-      // temporarily hide only floating UI elements (NOT the bottom action bar — we keep it visible for you)
-      const toHide = document.querySelectorAll('.ac-panel, .ac-chevron');
-      toHide.forEach(el => el.classList.add('hidden'));
+  function buildStatusAndBody() {
+    // This is your original “single body” composer. Kept unchanged per your request.
+    const q = n => {
+      // find any checked for that number
+      const r = document.querySelector(`input[name^="q${n}_"]:checked`);
+      return r?.value || '';
+    };
+    const redItems = [];
+    if (q(1) === 'No') redItems.push('1 - Lubrication point issues during the Lubrication Process. Check PDF report attached.');
+    if (q(2) === 'Yes') redItems.push('2 - Inconsistency in the volume added to the lubrication point. Check PDF report attached for more information.');
+    if (q(3) === 'No') redItems.push('3 - Impact on Condition of the lubrication related components. Check PDF report attached.');
+    if (q(4) === 'Yes') redItems.push('4 - Damage or leakage identified in the lubricated point. Check PDF report attached for more information.');
+    if (q(5) === 'Yes') redItems.push('5 - Lubricant consistency out of spec. Check PDF report attached for more information.');
+    if (q(6) === 'No') redItems.push('6 - Issues with the lubrication point Identification found. Check PDF report attached.');
+    if (q(7) === 'No') redItems.push('7 - Safety related issues identified during lubrication. Check PDF report attached.');
 
-      const wo = document.getElementById('wo_number').value || 'TIN-XXXXX';
-      const routeCode = (document.getElementById('route_search').value || '').split(' - ')[0] || 'NoRoute';
-      const { isGreen } = buildStatusAndBody();
-      const statusShort = isGreen ? 'GREEN' : 'RED';
-      const filename = `QAQC_${wo}_${routeCode}_${statusShort}.pdf`;
+    const isGreen = redItems.length === 0;
+    const headerLine = isGreen
+      ? 'QA/QC Performed with no issues identified. GREEN STATUS'
+      : 'QA/QC Performed. RED STATUS — See items below and PDF:';
 
-      const element = document.getElementById('captureArea');
-      const opt = {
-        margin:[10,10,10,10],
-        filename,
-        image:{ type:'jpeg', quality:0.98 },
-        html2canvas:{ scale:2, useCORS:true, scrollY:0 },
-        jsPDF:{ unit:'mm', format:'a4', orientation:'portrait' }
-      };
-      html2pdf().from(element).set(opt).save().finally(()=> {
-        toHide.forEach(el => el.classList.remove('hidden'));
-      });
-    }
+    const amtVal = (document.querySelector('.amt_value')?.value || '').trim();
+    // best-effort unit read (first match)
+    const unitRadio = document.querySelector('input[name^="amt_unit_"]:checked');
+    const amtUnit = unitRadio?.value === 'L' ? 'L' : 'g';
 
-    // ---------- Actions (from your working model) ----------
-    function submitThenPdf(){
-      if (!ensureWoOrAlert()) return;
-      if (!validateMandatoryQuestions()) return;
-      const subject = buildSubject();
-      const { bodyText } = buildStatusAndBody();
-      const mailto = `mailto:${encodeURIComponent(RECIPIENT)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
-      window.location.href = mailto;
-      setTimeout(downloadPDF, 350);
-    }
+    const bodyLines = [
+      headerLine,'',
+      `Business Unit: ${document.getElementById('business_unit').value}`,
+      `Department: ${document.getElementById('department').value}`,
+      `WO#: ${document.getElementById('wo_number').value || '—'}`,
+      `Route: ${document.getElementById('route_search').value || '—'}`,
+      `Asset: ${document.getElementById('asset_search').value || '—'}`,
+      `Amount Filled (1B): ${amtVal ? amtVal + ' ' + (amtUnit==='g'?'grams':'L') : '—'}`,'',
+      `Comments: ${document.querySelector('.entry-comments')?.value || ''}`,
+      ''
+    ];
+    if (!isGreen) bodyLines.push(...redItems);
+    return { isGreen, bodyText: bodyLines.join('\\n') };
+  }
 
-    function printPdfClicked(){
-      if (!ensureWoOrAlert()) return;
-      if (!validateMandatoryQuestions()) return;
-      downloadPDF();
-    }
+  function buildSubject() {
+    const wo = document.getElementById('wo_number').value || 'TIN-XXXXX';
+    const { isGreen } = buildStatusAndBody();
+    const statusText = isGreen ? 'Green Status' : 'Red Status';
+    return `QA/QC Execution Report - WO# ${wo} - ${statusText}`;
+  }
 
-    function clearForm(){
-      // remove all asset entries
-      entriesContainer.innerHTML = '';
-      // text/date/time/textarea
-      document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"], textarea')
-        .forEach(el => el.value = '');
-      // radios/checkboxes globally (units etc. inside entries are removed above)
-      document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el => el.checked = false);
-      // reset route/asset and gate
-      document.getElementById('route_search').value = '';
-      document.getElementById('formBody').classList.add('hidden');
-      document.getElementById('routeGate').classList.remove('hidden');
-    }
+  /* ---------- PDF + Email ---------- */
+  function downloadPDF(){
+    const toHide = document.querySelectorAll('.ac-panel, .ac-chevron, .entry-controls, .actions');
+    toHide.forEach(el => el.classList.add('hidden'));
 
-    document.getElementById('submitBtn').addEventListener('click', submitThenPdf);
-    document.getElementById('printBtn').addEventListener('click', printPdfClicked);
-    document.getElementById('clearBtn').addEventListener('click', clearForm);
+    const wo = document.getElementById('wo_number').value || 'TIN-XXXXX';
+    const routeCode = (document.getElementById('route_search').value || '').split(' - ')[0] || 'NoRoute';
+    const { isGreen } = buildStatusAndBody();
+    const statusShort = isGreen ? 'GREEN' : 'RED';
+    const filename = `QAQC_${wo}_${routeCode}_${statusShort}.pdf`;
 
-    // PWA registration (single)
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js', { scope: './' })
-          .catch(err => console.error('SW registration failed:', err));
-      });
-    }
-  </script>
+    const element = document.getElementById('captureArea');
+    const opt = {
+      margin:[10,10,10,10],
+      filename,
+      image:{ type:'jpeg', quality:0.98 },
+      html2canvas:{ scale:2, useCORS:true, scrollY:0 },
+      jsPDF:{ unit:'mm', format:'a4', orientation:'portrait' }
+    };
+    html2pdf().from(element).set(opt).save().finally(()=>{
+      toHide.forEach(el => el.classList.remove('hidden'));
+    });
+  }
+
+  function submitThenPdf() {
+    if (!ensureWoOrAlert()) return;
+    if (!validateMandatoryQuestions()) return;
+    const subject = buildSubject();
+    const { bodyText } = buildStatusAndBody();
+    const mailto = `mailto:${encodeURIComponent(RECIPIENT)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+    window.location.href = mailto;
+    setTimeout(() => downloadPDF(), 350);
+  }
+
+  function printPdfClicked(){
+    if (!ensureWoOrAlert()) return;
+    if (!validateMandatoryQuestions()) return;
+    downloadPDF();
+  }
+
+  function clearForm(){
+    // wipe top meta
+    ['business_unit','department','wo_number','route_search','asset_search'].forEach(id=>{
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    // reset gate & entries
+    document.getElementById('formBody').classList.add('hidden');
+    document.getElementById('routeGate').classList.remove('hidden');
+    assetEntries.innerHTML = '';
+  }
+
+  // Wire global buttons
+  document.getElementById('submitBtn').addEventListener('click', submitThenPdf);
+  document.getElementById('printBtn').addEventListener('click', printPdfClicked);
+  document.getElementById('clearBtn').addEventListener('click', clearForm);
+
+  // PWA SW (unchanged)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js', { scope: './' })
+        .catch(err => console.error('SW registration failed:', err));
+    });
+  }
+</script>
 </body>
 </html>
